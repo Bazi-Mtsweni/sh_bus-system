@@ -1,0 +1,149 @@
+a {
+  color: var(--blue);
+}
+.selector {
+  width: 150px;
+  height: 50px;
+  background-color: var(--blue);
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  padding: 2%;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto 2rem;
+}
+.selector a {
+  color: var(--white);
+  text-align: center;
+  width: 50%;
+  height: 100%;
+  padding: 5%;
+  font-weight: bold;
+}
+.selector a.current {
+  background-color: var(--white);
+  color: var(--blue);
+  border-radius: 20px;
+  text-align: center;
+}
+main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 5%;
+}
+main .image-container {
+  width: 40%;
+}
+main .form-section {
+  background-color: var(--bg);
+  border-radius: 25px;
+  width: 50%;
+  padding: 5%;
+  box-shadow: var(--shadow);
+}
+main .form-section form h2 {
+  font-weight: 900;
+  color: var(--blue);
+}
+main .form-section form .input {
+  width: 100%;
+  padding: 1rem;
+  padding-left: 1.5rem;
+  border-radius: 7px;
+  background-color: var(--bg);
+  border: 2px solid #7a7a7a;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+main .form-section form .input input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: var(--p);
+  width: 100%;
+  height: 100%;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+  color: var(--text);
+  font-family: inherit;
+}
+form .input select {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: var(--p);
+  color: var(--text);
+  width: 100%;
+  height: 100%;
+}
+form .input select option{
+  background-color: var(--bg);
+  color: var(--text);
+  
+}
+::placeholder {
+  color: var(--text);
+}
+form .input .error {
+  width: 100%;
+  color: var(--red);
+  text-align: right;
+}
+form .input .fa-solid {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+}
+form p {
+  margin-top: -1rem;
+  text-align: right;
+  width: 100%;
+}
+form .conditions {
+  margin-top: -1rem;
+  display: flex;
+  flex-direction: column;
+  height: 0px;
+  overflow-y: hidden;
+  transition: height 300ms ease;
+  padding: 0 0.5rem;
+}
+form .conditions.focused {
+  height: 120px;
+}
+form .conditions p {
+  margin: 0 auto 0.5rem;
+  color: var(--red);
+  text-transform: capitalize;
+}
+form .conditions p.passed {
+  color: var(--green);
+}
+form p a:hover,
+form .submit p a:hover {
+  text-decoration: underline;
+}
+form .submit {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+form .submit p {
+  text-align: left;
+  margin-top: 0;
+}
+form .submit button {
+  cursor: pointer;
+}
