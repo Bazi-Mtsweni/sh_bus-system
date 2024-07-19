@@ -3,7 +3,7 @@ const pwdIcon = document.getElementById("eyeIcon");
 const pwdConditions = document.querySelector(".conditions");
 const darkModeToggle = document.getElementById("dark-mode-toggle");
 const body = document.body;
-const BASE_URL = "http://localhost/sh-bus-system/public"; 
+const BASE_URL = "http://localhost/sh-bus-system/public";
 
 import { showAlert, showAlertBox, hideAlertBox } from "./alerts.js";
 import * as validators from "./form-validation.js";
@@ -21,7 +21,7 @@ window.matchPasswords = validators.matchPasswords;
 window.validateAdminID = validators.validateAdminID;
 
 // Password visibility eye icon toggler
-pwdIcon.addEventListener("click", function() {
+pwdIcon.addEventListener("click", function () {
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
     pwdIcon.classList.remove("fa-eye");
@@ -33,16 +33,15 @@ pwdIcon.addEventListener("click", function() {
   }
 });
 
-if(passwordInput && pwdConditions) {
-  passwordInput.addEventListener("focus", function(){
+if (passwordInput && pwdConditions) {
+  passwordInput.addEventListener("focus", function () {
     pwdConditions.classList.toggle("focused");
-  })
+  });
 
-  passwordInput.addEventListener("blur", function(){
+  passwordInput.addEventListener("blur", function () {
     pwdConditions.classList.remove("focused");
-  })
+  });
 }
-
 
 // --------------------------------------- NAV SUB MENU TOGGLE ------------------------------------
 
@@ -75,7 +74,7 @@ buttons.forEach(function (button) {
   });
 });
 
-
+// --------------------------------------- DARK MODE HANDLER ------------------------------------
 
 // Check if a dark mode cookie exists
 const isDarkMode = getCookie("darkMode");
@@ -112,7 +111,7 @@ function updateDarkContent() {
 }
 function updateLightContent() {
   const logos = document.querySelectorAll("#logo");
-  
+
   darkModeToggle.title = "Switch To Dark Mode";
   logos.forEach((logo) => {
     logo.src = BASE_URL + "/images/logo.svg";
@@ -132,3 +131,120 @@ darkModeToggle.addEventListener("click", function () {
     updateLightContent();
   }
 });
+
+// --------------------------------------- FORM SUBMISSION -------------------------------------------------
+
+const adminSubmitBtn = document.getElementById("admin-submit");
+const loginSubmitBtn = document.getElementById("login-submit");
+
+if (adminSubmitBtn) {
+  adminSubmitBtn.addEventListener("click", login);
+} else {
+  loginSubmitBtn.addEventListener("click", login);
+}
+
+function login(e) {
+  e.preventDefault();
+  const SERVER = "http://localhost/sh-bus-system/backend/";
+  localStorage.setItem("buttonId", "admin-loader");
+
+  // Validate fields again for submission
+  let username = validators.validateUsername(
+    document.getElementById("username"),
+    "username-error"
+  );
+  let password = validators.validateLoginPassword(
+    document.getElementById("password"),
+    "password-error"
+  );
+
+  let botCheck = validators.validateBotCheck();
+  let form = document.getElementsByTagName("form")[0];
+  let formID = form.getAttribute("id");
+
+  switch (formID) {
+    case "admin-form":
+      let adminID = validators.validateAdminID(
+        document.getElementById("admin-id"),
+        "admin-id-error"
+      );
+
+      if (username && password && adminID && botCheck) {
+        // Call the function with form data
+        sendAjaxRequest(
+          SERVER + "scripts/login.php",
+          { name: "username", value: username },
+          { name: "password", value: password },
+          { name: "admin_id", value: adminID }
+        );
+      } else {
+        showAlert("error", "Please fix all errors and try again");
+      }
+      break;
+
+    case "user-login":
+      if (username && password && botCheck) {
+        // Call the function with form data
+        sendAjaxRequest(
+          SERVER + "scripts/login.php",
+          { name: "username", value: username },
+          { name: "password", value: password }
+        );
+      } else {
+        showAlert("error", "Please fix all errors and try again");
+      }
+      break;
+
+    default:
+      console.log("Form Error");
+      break;
+  }
+}
+
+function sendAjaxRequest(url, ...fields) {
+  let params = new URLSearchParams();
+  var buttonId = localStorage.getItem("buttonId");
+  showLoader(buttonId);
+  fields.forEach((field) => {
+    if (field.name && field.value) {
+      params.append(field.name, field.value);
+    }
+  });
+
+  // Initialize the XMLHttpRequest
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      hideLoader(buttonId);
+      showAlert("success", "Success! Redirecting...");
+      if (xhr.status == 200) {
+        var response = JSON.parse(xhr.responseText);
+        console.log(response);
+        if (response.success) {
+          window.location.href = response.redirect;
+        } else {
+          showAlert("error", response.error);
+        }
+      } else {
+        showAlert(
+          "error",
+          "Error: Message could not be sent. Please try again later."
+        );
+      }
+    }
+  };
+  xhr.send(params);
+}
+
+function showLoader(buttonId) {
+  var loader = document.getElementById(buttonId);
+  loader.style.display = "inline";
+}
+
+function hideLoader(buttonId) {
+  var loader = document.getElementById(buttonId);
+  loader.style.display = "none";
+  localStorage.removeItem(buttonId);
+}

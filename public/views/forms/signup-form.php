@@ -77,6 +77,7 @@ require(BASE_DIR . '/config.php');
                     <p>Already have an account? <a href="./login-form.php">Login</a></p>
                     <button type="submit" id="login-submit" class="btn-blue">
                         <span>Submit</span>
+                        <img id="contact-loader" class="submit-btn-loader" src="./Images/loader.gif" alt="Button Loader" title="Loading..." style="display: none;">
                     </button>
                 </div>
             </form>

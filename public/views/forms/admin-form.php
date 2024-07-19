@@ -18,13 +18,14 @@ require(BASE_DIR .'/config.php');
 </head>
 <body class="dar">
     <?php require(BASE_DIR. '/includes/header.php'); ?>
+    <?php require(BASE_DIR. '/includes/alerts.php'); ?>
 
     <main>
         <div class="image-container">
             <img src="<?php echo BASE_URL.'/images/office-chair.webp';?>" alt="Shool Kids">
         </div>
         <div class="form-section">
-            <form action="">
+            <form id="admin-form">
                 <div class="selector">
                     <a href="./admin-form.php" class="current">Admin</a>
                     <a href="./login-form.php">Parent</a>
@@ -44,9 +45,11 @@ require(BASE_DIR .'/config.php');
                     <input type="text" name="admin-id" id="admin-id" placeholder="Admin ID" onkeyup="validateAdminID(this, 'admin-id-error');" required>
                     <span class="error" id="admin-id-error"></span>
                 </div>
+                <input type="hidden" name="bot-check" id="bot-check" aria-hidden="true">
                 <div class="submit">
-                    <button type="submit" id="login-submit" class="btn-blue">
+                    <button type="submit" id="admin-submit" class="btn-blue">
                         <span>Submit</span>
+                        <img id="admin-loader" class="submit-btn-loader" src="<?php echo BASE_URL. '/images/loader.gif'; ?>" alt="Button Loader" title="Loading..." style="display: none;">
                     </button>
                 </div>
             </form>

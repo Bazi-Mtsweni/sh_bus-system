@@ -1,3 +1,8 @@
+<noscript>
+  <style>html{display:none;}</style>
+  <meta http-equiv="refresh" content="0; url=<?php echo BASE_URL .'/nojs/index.php';?>">
+</noscript>
+
 <header>
     <div class="image-container">
         <img id="logo" src="<?php echo BASE_URL . '/images/logo.svg'; ?>" alt="Strive High Logo">

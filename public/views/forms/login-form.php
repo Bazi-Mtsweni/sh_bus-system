@@ -20,6 +20,7 @@ require(BASE_DIR . '/config.php');
 
 <body>
     <?php require(BASE_DIR . '/includes/header.php'); ?>
+    <?php require(BASE_DIR . '/includes/alerts.php'); ?>
 
     <main>
         <div class="image-container">
@@ -30,10 +31,10 @@ require(BASE_DIR . '/config.php');
                 <a href="./admin-form.php">Admin</a>
                 <a href="./login-form.php" class="current">Parent</a>
             </div>
-            <form action="">
+            <form id="user-login">
                 <h2>Welcome Back! Log In.</h2>
                 <div class="input">
-                    <input type="text" name="username" id="username" placeholder="Username" onkeyup="validateUsername(this, 'username-error');" required >
+                    <input type="text" name="username" id="username" placeholder="Username" onkeyup="validateUsername(this, 'username-error');" required>
                     <span class="error" id="username-error"></span>
                 </div>
                 <div class="input">
@@ -42,10 +43,12 @@ require(BASE_DIR . '/config.php');
                     <i class="fa-solid fa-eye" id="eyeIcon" title="Show Password"></i>
                 </div>
                 <p>Forgot Your Password? <a href="#">Reset Password</a></p>
+                <input type="hidden" name="bot-check" id="bot-check" aria-hidden="true">
                 <div class="submit">
                     <p>Don&apos;t have an account? <a href="./signup-form.php">Register Account</a></p>
                     <button type="submit" id="login-submit" class="btn-blue">
                         <span>Submit</span>
+                        <img id="admin-loader" class="submit-btn-loader" src="<?php echo BASE_URL. '/images/loader.gif'; ?>" alt="Button Loader" title="Loading..." style="display: none;">
                     </button>
                 </div>
             </form>
