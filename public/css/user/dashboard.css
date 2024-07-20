@@ -1,0 +1,92 @@
+:root {
+  --p: 1rem;
+}
+.registration-info {
+  background-color: var(--blue);
+  margin: 4rem auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.registration-info .information {
+  position: relative;
+  padding: 5%;
+}
+.registration-info .information .text {
+  margin: 2rem 0 4rem;
+}
+.registration-info .information .text p,
+li {
+  color: var(--white);
+  margin-bottom: 1rem;
+  line-height: 1.5rem;
+}
+.registration-info .information .text ul.lv1 {
+  margin-left: 2rem;
+}
+.registration-info .information .text ul.lv1 li {
+  list-style: square;
+}
+.registration-info .information .text ul.lv2 li {
+  list-style: circle;
+  margin-left: 2rem;
+}
+.registration-info .information .text ul.lv2 li:is(:first-child) {
+  margin-top: 1rem;
+}
+
+/* ----------------------------------------------------- NEWS & UPDATES ------------------------------------------------- */
+
+.news {
+    position: relative;
+    width: 100%;
+    padding: 5%;
+}
+.news h2{
+    margin-bottom: 3rem;
+}
+.news .cards{
+    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+.news .cards .card .image-container{
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+.news .cards .card h3{
+    margin: 1rem 0;
+    font-size: calc(var(--h3) + 0.3rem);
+}
+.news .cards .card a{
+    display: block;
+    width: fit-content;
+    position: relative;
+    margin-top: 1rem;
+    font-weight: bold;
+    color: var(--text);
+    padding-left: 0;
+    transition: padding 300ms ease, color 300ms ease;
+}
+.news .cards .card a::after{
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: var(--gold);
+    bottom: -0.2rem;
+    left: 0rem;
+    transition: left 300ms ease, width 300ms ease;
+}
+.news .cards .card a:hover{
+    padding-left: 1rem;
+    color: var(--gold);
+}
+.news .cards .card a:hover::after{
+    width: 50%;
+    left: 1rem;
+}
+
+/* ----------------------------------------------------- NEWS & UPDATES ------------------------------------------------- */

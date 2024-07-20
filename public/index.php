@@ -19,12 +19,15 @@ define('BASE_DIR', realpath(dirname(__FILE__) . '/'));
 
 <body>
     <?php require('./includes/header.php'); ?>
+    <?php 
+        $button_text = "Apply For Your Child";
+        $link = "#";
+        $title = "Convenient and Safe Transportation for All Students";
+        $body = "Strive High Secondary School introduces a new bus registration system designed to ensure safe and efficient transportation for our learners. Sign up today to secure a seat for your child next year.";
+        require(BASE_DIR . "/includes/hero.php"); 
+    ?>
 
-    <div class="hero">
-        <h1>Convenient and Safe Transportation for All Students</h1>
-        <p>Strive High Secondary School introduces a new bus registration system designed to ensure safe and efficient transportation for our learners. Sign up today to secure a seat for your child next year.</p>
-        <a href="#" class="btn-blue">Apply Today!</a>
-    </div>
+    
 
     This is a public page
 

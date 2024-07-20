@@ -1,0 +1,13 @@
+.form-section{
+    position: relative;
+    margin: auto;
+    margin-top: -5rem;
+    z-index: 899;
+    width: 60%;
+}
+.form-section form h2 {
+    width: 100%;
+    text-align: center;
+    font-weight: 900;
+    color: var(--blue);
+  }
