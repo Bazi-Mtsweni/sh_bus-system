@@ -31,8 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admin_query = "SELECT * FROM admin WHERE email = ?";
     $parent_query = "SELECT * FROM parents WHERE email = ?";
     
-    // Check if the user is an admin
-    if ($stmt = $conn->prepare($admin_query)) {
+    // Check if the user is an admin by checking if the admin id is not empty
+    if (!empty($admin_id)) {
+        $stmt = $conn->prepare($admin_query);
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $admin_result = $stmt->get_result();
@@ -70,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($parent_result->num_rows > 0) {
             $parent = $parent_result->fetch_assoc();
             if ($password === $parent['password']) { //Use password_verify() for hashed password
-                // Admin authenticated
+                // Parent authenticated
                 session_regenerate_id(true);
                 setcookie(session_name(), session_id(), [
                     'expires' => time() + 86400, // Cookie expires in 1 day
@@ -81,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'samesite' => 'Lax' 
                 ]);
                 $_SESSION["username"] = $parent['parentName'];
-                $_SESSION["admin_id"] = $parent['parentId'];
+                $_SESSION["parent_id"] = $parent['parentId'];
                 redirect(true, '../user/user-dashboard.php');
                 exit;
             } else {

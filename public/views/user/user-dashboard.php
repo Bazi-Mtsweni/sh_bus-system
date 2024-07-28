@@ -1,8 +1,14 @@
 <?php
     define('BASE_DIR', realpath(dirname(__FILE__) . '/../..'));
-    require(BASE_DIR . '/config.php');
 
-    $username = isset($_SESSION["username"]) ? isset($_SESSION["username"]) : " ";
+    require(BASE_DIR . '/config.php');
+    require(ROOT_PATH . '/backend/db/conn.php');
+
+    if (!isset($_SESSION["parent_id"])) { 
+        header("Location: http://localhost/sh-bus-system/public");
+    }
+
+    $username = $_SESSION["username"];
 ?>
 
 <!DOCTYPE html>

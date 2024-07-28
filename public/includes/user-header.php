@@ -48,7 +48,7 @@
             <div class="user-info">
                 <i class="fa-solid fa-circle-user"></i>
                 <div class="info">
-                    <p><?php echo $username ?></p>
+                    <p><?php echo $username; ?></p>
                 </div>
                 <i class="fa-solid fa-chevron-down" id="dropdown-icon" data-menu="user"></i>
             </div>
