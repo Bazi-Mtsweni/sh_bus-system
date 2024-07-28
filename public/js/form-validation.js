@@ -72,7 +72,7 @@ export function validateEmail(input, error) {
     emailError.innerHTML = "Email required";
     return false;
   }
-  if (!email.match(/^[A-Za-z\._\-[0-9]*[@][A-Za-z]*([\.][a-z]{2,4}){1,}$/)) {
+  if (!email.match(/^[A-Za-z0-9\._\-[0-9]*[@][A-Za-z]*([\.][a-z]{2,6}){1,}$/)) {
     emailError.innerHTML = "Enter a valid email";
     return false;
   }
@@ -85,8 +85,8 @@ export function validateTel(input, error) {
   const telError = document.getElementById(error);
 
   if (tel.length == 0) {
-    telError.innerHTML = "Phone number required";
-    return false;
+    telError.innerHTML = " ";
+    return true;
   }
   if (tel.length !== 10) {
     telError.innerHTML = "phone number should be 10 digits";

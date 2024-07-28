@@ -1,3 +1,8 @@
+<noscript>
+  <style>html{display:none;}</style>
+  <meta http-equiv="refresh" content="0; url=<?php echo BASE_URL .'/nojs/index.php';?>">
+</noscript>
+
 <header>
     <div class="logo">
         <h1>Admin Panel</h1>
@@ -15,7 +20,7 @@
     <div class="admin-info">
         <i class="fa-solid fa-circle-user"></i>
         <div class="info">
-            <p><?php echo $username?></p>
+            <p><?php echo $initials?></p>
             <p>Super Admin</p>
         </div>
         <i class="fa-solid fa-chevron-down" id="dropdown-icon" data-menu="admin"></i>

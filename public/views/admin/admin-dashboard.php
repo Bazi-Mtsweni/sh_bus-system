@@ -9,7 +9,7 @@ if (!isset($_SESSION["admin_id"])) {
     header("Location: http://localhost/sh-bus-system/public");
 }
 
-$username = isset($_SESSION["username"]) ? $_SESSION["username"] : "";
+$initials = $_SESSION["initials"];
 $date = date('j F Y');
 
 ?>
@@ -28,7 +28,7 @@ $date = date('j F Y');
 
 <body class="">
     <?php include(BASE_DIR . "/includes/admin-header.php"); ?>
-    <h2 class="intro">Welcome to admin, <?php echo $username?></h2>
+    <h2 class="intro">Welcome to admin, <?php echo $initials?></h2>
     <section class="dash-nav">
         <?php include(BASE_DIR . "/includes/admin-nav.php"); ?>
         <div class="dashboard">
@@ -51,7 +51,7 @@ $date = date('j F Y');
                     <div class="image-container icon">
                         <img src="<?php echo BASE_URL . '/images/profile-picture.png'; ?>" alt="User Profile Image">
                     </div>
-                    <h3><?php echo $username?></h3>
+                    <h3><?php echo $initials?></h3>
                     <p>Super Admin</p>
                     <a href="#" class="button">Manage Profile</a>
                 </div>

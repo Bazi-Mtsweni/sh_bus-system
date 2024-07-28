@@ -32,8 +32,8 @@ require(BASE_DIR .'/config.php');
                 </div>
                 <h2>Admin Portal Log In.</h2>
                 <div class="input">
-                    <input type="text" name="username" id="username" placeholder="Username" onkeyup="validateUsername(this, 'username-error');" required >
-                    <span class="error" id="username-error"></span>
+                    <input type="email" name="email" id="email" placeholder="Email Address" onkeyup="validateEmail(this, 'email-error');" required >
+                    <span class="error" id="email-error"></span>
                 </div>
                 <div class="input">
                     <input type="password" name="password" id="password" placeholder="Password" onkeyup="validateLoginPassword(this, 'password-error');" required>

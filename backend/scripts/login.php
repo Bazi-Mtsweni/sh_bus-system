@@ -1,10 +1,10 @@
 <?php
-session_start();
+require "../db/conn.php";
 
 function response($bool, $msg)
 {
     header('Content-Type: application/json');
-    echo json_encode(array('success' => $bool, 'error' => $msg));
+    echo json_encode(array('error' => $bool, 'error' => $msg));
     exit;
 }
 function redirect($bool, $path)
@@ -16,46 +16,81 @@ function redirect($bool, $path)
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $username = isset($_POST["username"]) ? trim($_POST["username"]) : "";
+    $email = isset($_POST["email"]) ? trim($_POST["email"]) : "";
     $password = isset($_POST["password"]) ? trim($_POST["password"]) : "";
     $admin_id = isset($_POST["admin_id"]) ? trim($_POST["admin_id"]) : "";
     $bot_check = isset($_POST["bot-check"]);
 
-    if (empty($username) || empty($password)) {
+    if (empty($email) || empty($password)) {
         response(false, "Please fix all errors and try again");
-        $username = $_POST["username"];
+        $email = $_POST["email"];
         $password = $_POST["password"];
         $admin_id = $_POST["admin-id"];
     }
 
-    // Dummy authentication logic
-    // Replace this with actual authentication code (e.g., checking username and password in the database)
-    $is_authenticated = true; // Assume authentication is successful for example purposes
-
-    if ($is_authenticated) {
-        // Regenerate session ID to prevent session fixation attacks
-        session_regenerate_id(true);
-
-        // Set a session cookie using the session ID
-        setcookie(session_name(), session_id(), [
-            'expires' => time() + 86400, // Cookie expires in 1 day
-            'path' => '/',
-            'domain' => '', 
-            'secure' => false, 
-            'httponly' => true, 
-            'samesite' => 'Lax' 
-        ]);
-
-
-        if (isset($_POST["admin_id"]) && $admin_id === "ICT3715") {
-            $_SESSION["admin_id"] = $admin_id;
-            $_SESSION["username"] = $username;
-            redirect(true, '../admin/admin-dashboard.php');
+    $admin_query = "SELECT * FROM admin WHERE email = ?";
+    $parent_query = "SELECT * FROM parents WHERE email = ?";
+    
+    // Check if the user is an admin
+    if ($stmt = $conn->prepare($admin_query)) {
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $admin_result = $stmt->get_result();
+        if ($admin_result->num_rows > 0) {
+            $admin = $admin_result->fetch_assoc();
+            if ($password === $admin['password']) { //Use password_verify() for hashed password
+                // Admin authenticated
+                session_regenerate_id(true);
+                setcookie(session_name(), session_id(), [
+                    'expires' => time() + 86400, // Cookie expires in 1 day
+                    'path' => '/',
+                    'domain' => '', 
+                    'secure' => false, 
+                    'httponly' => true, 
+                    'samesite' => 'Lax' 
+                ]);
+                $_SESSION["admin_id"] = $admin['adminId'];
+                $_SESSION["initials"] = $admin['initials'];
+                redirect(true, '../admin/admin-dashboard.php');
+                exit;
+            } else {
+                response(false, "Please insert a valid password or reset it");
+                exit;
+            }
         } else {
-            redirect(true, '../user/user-dashboard.php');
+            response(false, "Incorrect email or it does not exist");
         }
-    } else {
-        response(false, "Invalid username or password");
+    }
+
+    // Check if the user is a parent
+    if ($stmt = $conn->prepare($parent_query)) {
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $parent_result = $stmt->get_result();
+        if ($parent_result->num_rows > 0) {
+            $parent = $parent_result->fetch_assoc();
+            if ($password === $parent['password']) { //Use password_verify() for hashed password
+                // Admin authenticated
+                session_regenerate_id(true);
+                setcookie(session_name(), session_id(), [
+                    'expires' => time() + 86400, // Cookie expires in 1 day
+                    'path' => '/',
+                    'domain' => '', 
+                    'secure' => false, 
+                    'httponly' => true, 
+                    'samesite' => 'Lax' 
+                ]);
+                $_SESSION["username"] = $parent['parentName'];
+                $_SESSION["admin_id"] = $parent['parentId'];
+                redirect(true, '../user/user-dashboard.php');
+                exit;
+            } else {
+                response(false, "Please insert a valid password or reset it");
+                exit;
+            }
+        } else {
+            response(false, "Incorrect email or it does not exist");
+        }
     }
 } else {
     response(false, "Invalid request method");

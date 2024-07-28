@@ -2,6 +2,9 @@ const darkModeToggle = document.getElementById("dark-mode-toggle");
 const body = document.body;
 const BASE_URL = "http://localhost/sh-bus-system/public";
 
+import { showAlert, showAlertBox, hideAlertBox } from "./alerts.js";
+import { validateName, validateRSAID, luhnCheck, validateTel, validateBotCheck } from "./form-validation.js" ;
+
 // --------------------------------------- NAV SUB MENU TOGGLE ------------------------------------
 const menuBtn = document.getElementById("dropdown-icon");
 
@@ -71,3 +74,97 @@ darkModeToggle.addEventListener("click", function () {
     updateLightContent();
   }
 });
+
+// --------------------------------------- FORM VALIDATION ------------------------------------
+window.validateName = validateName;
+window.validateRSAID = validateRSAID;
+window.validateTel = validateTel;
+window.validateBotCheck = validateBotCheck;
+
+const nextButton = document.getElementById("next-button");
+nextButton.addEventListener("click", login);
+
+function login(e) {
+  e.preventDefault();
+
+  const SERVER = "http://localhost/sh-bus-system/backend/";
+  localStorage.setItem("buttonId", "next-loader");
+
+  // Validate fields again for submission
+  let name = validateName(
+    document.getElementById("name"),
+    "name-error"
+  );
+  let tel = validateTel(
+    document.getElementById("tel"),
+    "tel-error"
+  );
+  let idNumber = validateRSAID(
+    document.getElementById("id"),
+    "id-error"
+  );
+
+  if (name && tel && idNumber) {
+    // Get grade
+    let grade = document.getElementById("grade").value;
+
+    // Call the function with form data
+    sendAjaxRequest(
+      SERVER + "scripts/learner.php",
+      { name: "name", value: name },
+      { name: "tel", value: tel },
+      { name: "grade", value: grade },
+      { name: "id-number", value: idNumber }
+    );
+  } else {
+    showAlert("error", "Please fix all errors and try again");
+  }
+}
+
+function sendAjaxRequest(url, ...fields) {
+  let params = new URLSearchParams();
+  var buttonId = localStorage.getItem("buttonId");
+  showLoader(buttonId);
+  fields.forEach((field) => {
+    if (field.name && field.value) {
+      params.append(field.name, field.value);
+    }
+  });
+
+  // Initialize the XMLHttpRequest
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      hideLoader(buttonId);
+      // showAlert("success", "Success! Redirecting...");
+      if (xhr.status == 200) {
+        var response = JSON.parse(xhr.responseText);
+        console.log(response);
+        if (response.success) {
+          window.location.href = response.redirect;
+        } else {
+          showAlert("error", response.error);
+        }
+      } else {
+        showAlert(
+          "error",
+          "Error: Message could not be sent. Please try again later."
+        );
+      }
+    }
+  };
+  xhr.send(params);
+}
+
+function showLoader(buttonId) {
+  var loader = document.getElementById(buttonId);
+  loader.style.display = "inline";
+}
+
+function hideLoader(buttonId) {
+  var loader = document.getElementById(buttonId);
+  loader.style.display = "none";
+  localStorage.removeItem(buttonId);
+}

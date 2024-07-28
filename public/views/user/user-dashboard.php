@@ -2,7 +2,7 @@
     define('BASE_DIR', realpath(dirname(__FILE__) . '/../..'));
     require(BASE_DIR . '/config.php');
 
-    $username = "Kgotso Mtsweni";
+    $username = isset($_SESSION["username"]) ? isset($_SESSION["username"]) : " ";
 ?>
 
 <!DOCTYPE html>
@@ -94,7 +94,7 @@
 
     <?php require(BASE_DIR . "/includes/footer.php"); ?>
 
-    <script src="<?php echo BASE_URL . "/js/parent-pages.js"; ?>"></script>
+    <script type="module" src="<?php echo BASE_URL . "/js/parent-pages.js"; ?>"></script>
 </body>
 
 </html>

@@ -149,9 +149,9 @@ function login(e) {
   localStorage.setItem("buttonId", "admin-loader");
 
   // Validate fields again for submission
-  let username = validators.validateUsername(
-    document.getElementById("username"),
-    "username-error"
+  let email = validators.validateEmail(
+    document.getElementById("email"),
+    "email-error"
   );
   let password = validators.validateLoginPassword(
     document.getElementById("password"),
@@ -169,11 +169,11 @@ function login(e) {
         "admin-id-error"
       );
 
-      if (username && password && adminID && botCheck) {
+      if (email && password && adminID && botCheck) {
         // Call the function with form data
         sendAjaxRequest(
           SERVER + "scripts/login.php",
-          { name: "username", value: username },
+          { name: "email", value: email },
           { name: "password", value: password },
           { name: "admin_id", value: adminID }
         );
@@ -183,11 +183,11 @@ function login(e) {
       break;
 
     case "user-login":
-      if (username && password && botCheck) {
+      if (email && password && botCheck) {
         // Call the function with form data
         sendAjaxRequest(
           SERVER + "scripts/login.php",
-          { name: "username", value: username },
+          { name: "email", value: email },
           { name: "password", value: password }
         );
       } else {
@@ -218,7 +218,6 @@ function sendAjaxRequest(url, ...fields) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
       hideLoader(buttonId);
-      showAlert("success", "Success! Redirecting...");
       if (xhr.status == 200) {
         var response = JSON.parse(xhr.responseText);
         console.log(response);

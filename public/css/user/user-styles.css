@@ -141,6 +141,7 @@ a {
   color: var(--white);
   padding: 0.5rem 1rem;
   border-radius: 7px;
+  width: max-content;
   transition: background-color 300ms ease, border 300ms ease;
 }
 .btn-blue:hover {

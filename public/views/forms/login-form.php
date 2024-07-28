@@ -20,7 +20,7 @@ require(BASE_DIR . '/config.php');
 
 <body>
     <?php require(BASE_DIR . '/includes/header.php'); ?>
-    <?php require(BASE_DIR . '/includes/alerts.php'); ?>
+    <?php include(BASE_DIR . '/includes/alerts.php'); ?>
 
     <main>
         <div class="image-container">
@@ -34,8 +34,8 @@ require(BASE_DIR . '/config.php');
             <form id="user-login">
                 <h2>Welcome Back! Log In.</h2>
                 <div class="input">
-                    <input type="text" name="username" id="username" placeholder="Username" onkeyup="validateUsername(this, 'username-error');" required>
-                    <span class="error" id="username-error"></span>
+                    <input type="email" name="email" id="email" placeholder="Email Address" onkeyup="validateEmail(this, 'email-error');" required>
+                    <span class="error" id="email-error"></span>
                 </div>
                 <div class="input">
                     <input type="password" name="password" id="password" placeholder="Password" onkeyup="validateLoginPassword(this, 'password-error');" required>

@@ -22,18 +22,19 @@ $username = "Kgotso Mtsweni";
 </head>
 
 <body>
-    <?php include(BASE_DIR . "/includes/user-header.php"); ?>
     <?php
+    include(BASE_DIR . "/includes/user-header.php");
     $button_text = "";
     $link = "";
     $body = "";
     $title = "Register your child for A hassle-free commute.";
 
     require(BASE_DIR . "/includes/hero.php");
+    require(BASE_DIR . '/includes/alerts.php');
     ?>
     <div class="form-section">
         <form id="learner-form">
-            <h2>Register An Account</h2>
+            <h2>Learner Details <span>(Step 1 of 2)</span></h2>
 
             <div class="input">
                 <input type="text" name="name" id="name" placeholder="Full Name" onkeyup="validateName(this, 'name-error')" required>
@@ -56,11 +57,11 @@ $username = "Kgotso Mtsweni";
                 <input type="tel" name="tel" id="tel" placeholder="Contact Number" onkeyup="validateTel(this, 'tel-error');" required>
                 <span class="error" id="tel-error"></span>
             </div>
+            <input type="hidden" name="bot-check" id="bot-check" aria-hidden="true">
             <div class="submit">
-                <p>Already have an account? <a href="./login-form.php">Login</a></p>
-                <button type="submit" id="login-submit" class="btn-blue">
-                    <span>Submit</span>
-                    <img id="contact-loader" class="submit-btn-loader" src="./Images/loader.gif" alt="Button Loader" title="Loading..." style="display: none;">
+                <button type="submit" id="next-button" class="btn-blue">
+                    <span>Next Step →</span>
+                    <img id="next-loader" class="next-btn-loader" src="<?php echo BASE_URL . '/images/loader.gif'; ?>" alt="Button Loader" title="Loading..." style="display: none;">
                 </button>
             </div>
         </form>
@@ -68,7 +69,7 @@ $username = "Kgotso Mtsweni";
 
     <?php require(BASE_DIR . "/includes/footer.php"); ?>
 
-    <script src="<?php echo BASE_URL . "/js/parent-pages.js"; ?>"></script>
+    <script type="module" src="<?php echo BASE_URL . "/js/parent-pages.js"; ?>"></script>
 </body>
 
 </html>
