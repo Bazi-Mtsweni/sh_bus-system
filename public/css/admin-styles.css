@@ -58,7 +58,8 @@ html {
 body.dark {
   --text: #a6b5c3;
   --bg: #040c14;
-  --blue: #2687cc;
+  --blue: #2c4b61;
+  --gold: #d49c00;
 
   --shadow: 0px 0px 25px rgba(77, 99, 145, 0.15);
 }
