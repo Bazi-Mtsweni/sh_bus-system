@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $parent_result = $stmt->get_result();
         if ($parent_result->num_rows > 0) {
             $parent = $parent_result->fetch_assoc();
-            if ($password === $parent['password']) { //Use password_verify() for hashed password
+            if (password_verify($password, $parent['password'])) { //Use password_verify() for hashed password
                 // Parent authenticated
                 session_regenerate_id(true);
                 setcookie(session_name(), session_id(), [

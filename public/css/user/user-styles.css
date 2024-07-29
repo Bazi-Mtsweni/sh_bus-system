@@ -404,6 +404,8 @@ header .user-info {
 header .user-info .info {
   margin: 0 0.5rem;
   background-color: transparent;
+  width: fit-content;
+  justify-content: flex-start;
 }
 header .user-info .info p,
 header .user-info .fa-solid {
@@ -415,7 +417,7 @@ header .user-info .fa-solid {
 header .user-info .info p {
   font-size: 1rem;
   font-weight: bold;
-  width: max-content;
+  width: fit-content;
 }
 header .user-info .fa-solid:nth-child(1) {
   font-size: calc(var(--p) + 1rem);

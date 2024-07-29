@@ -20,34 +20,18 @@ require(BASE_DIR . '/config.php');
 
 <body class="dar">
     <?php require(BASE_DIR . '/includes/header.php'); ?>
+    <?php include(BASE_DIR . '/includes/alerts.php'); ?>
 
     <main>
         <div class="image-container">
             <img src="<?php echo BASE_URL . '/images/student.png'; ?>" alt="Shool Kids">
         </div>
         <div class="form-section">
-            <form action="">
+            <form id="parent-form">
                 <h2>Register An Account</h2>
-                <div class="input">
-                    <select name="title" id="title">
-                        <option value="mr">Mr.</option>
-                        <option value="ms">Ms.</option>
-                        <option value="mrs">Mrs.</option>
-                        <option value="dr">Dr.</option>
-                        <option value="prof">Prof.</option>
-                    </select>
-                </div>
                 <div class="input">
                     <input type="text" name="name" id="name" placeholder="Full Name" onkeyup="validateName(this, 'name-error')" required>
                     <span class="error" id="name-error"></span>
-                </div>
-                <div class="input">
-                    <input type="text" name="id" id="id" placeholder="13-Digit RSA ID Number" onkeyup="validateRSAID(this, 'id-error')" required>
-                    <span class="error" id="id-error"></span>
-                </div>
-                <div class="input">
-                    <input type="text" name="username" id="username" placeholder="Username" onkeyup="validateUsername(this, 'username-error');" required>
-                    <span class="error" id="username-error"></span>
                 </div>
                 <div class="input">
                     <input type="email" name="email" id="email" placeholder="Email" onkeyup="validateEmail(this, 'email-error');" required>
@@ -73,11 +57,12 @@ require(BASE_DIR . '/config.php');
                     <input type="password" name="password-2" id="password-2" placeholder="Repeat Password" onkeyup="matchPasswords(this, 'password-2-error');" required>
                     <span class="error" id="password-2-error"></span>
                 </div>
+                <input type="hidden" name="bot-check" id="bot-check" aria-hidden="true">
                 <div class="submit">
                     <p>Already have an account? <a href="./login-form.php">Login</a></p>
-                    <button type="submit" id="login-submit" class="btn-blue">
+                    <button type="submit" id="user-registration" class="btn-blue">
                         <span>Submit</span>
-                        <img id="contact-loader" class="submit-btn-loader" src="<?php echo BASE_URL . '/images/loader.gif'; ?>" alt="Button Loader" title="Loading..." style="display: none;">
+                        <img id="register-loader" class="submit-btn-loader" src="<?php echo BASE_URL . '/images/loader.gif'; ?>" alt="Button Loader" title="Loading..." style="display: none;">
                     </button>
                 </div>
             </form>

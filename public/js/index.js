@@ -134,14 +134,20 @@ darkModeToggle.addEventListener("click", function () {
 
 // --------------------------------------- FORM SUBMISSION -------------------------------------------------
 
+// Form buttons
 const adminSubmitBtn = document.getElementById("admin-submit");
 const loginSubmitBtn = document.getElementById("login-submit");
+const userRegisterBtn = document.getElementById("user-registration");
 
 if (adminSubmitBtn) {
   adminSubmitBtn.addEventListener("click", login);
-} else {
+} else if(loginSubmitBtn) {
   loginSubmitBtn.addEventListener("click", login);
+} else if(userRegisterBtn) {
+  userRegisterBtn.addEventListener("click", registerUser);
 }
+
+
 
 function login(e) {
   e.preventDefault();
@@ -196,7 +202,74 @@ function login(e) {
       break;
 
     default:
-      console.log("Form Error");
+      showAlert("error", "Error processing correct form data. Contact support");
+      break;
+  }
+}
+
+function registerUser(e) {
+  e.preventDefault();
+  const SERVER = "http://localhost/sh-bus-system/backend/";
+  localStorage.setItem("buttonId", "register-loader");
+
+  // Validate fields again for submission
+  let name = validators.validateName(
+    document.getElementById("name"),
+    "name-error"
+  );
+  let email = validators.validateEmail(
+    document.getElementById("email"),
+    "email-error"
+  );
+  let tel = validators.validateTel(
+    document.getElementById("tel"),
+    "tel-error"
+  );
+  let password = validators.validateLoginPassword(
+    document.getElementById("password"),
+    "password-error"
+  );
+  let password2 = validators.matchPasswords(
+    document.getElementById("password-2"),
+    "password-2-error"
+  );
+
+  let botCheck = validators.validateBotCheck();
+  let form = document.getElementsByTagName("form")[0];
+  let formID = form.getAttribute("id");
+
+  switch (formID) {
+    case "parent-form":
+    
+      if (name && email && tel && password && password2 && botCheck) {
+        // Call the function with form data
+        sendAjaxRequest(
+          SERVER + "scripts/register.php",
+          { name: "name", value: name },
+          { name: "email", value: email },
+          { name: "tel", value: tel },
+          { name: "password", value: password }
+        );
+      } else {
+        showAlert("error", "Please fix all errors and try again");
+      }
+      break;
+
+    case "student-form":
+      if (email && password && botCheck) {
+        // Call the function with form data
+        sendAjaxRequest(
+          SERVER + "scripts/login.php",
+          { name: "email", value: email },
+          { name: "password", value: password }
+        );
+      } else {
+        showAlert("error", "Please fix all errors and try again");
+      }
+      break;
+
+    default:
+      showAlert("error", "Error processing correct form data. Contact support");
       break;
   }
 }

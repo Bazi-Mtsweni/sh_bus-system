@@ -144,7 +144,7 @@ export function matchPasswords(input, error) {
     const password2Error = document.getElementById(error);
 
     if (passwordTwo.length == 0) {
-        password2Error.innerHTML = "Please repeat password";
+        password2Error.innerHTML = "Repeat password";
         return false;
     }
 
