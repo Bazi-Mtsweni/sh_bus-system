@@ -397,7 +397,7 @@ header .nav-info .nav .menu li a {
 }
 
 header .user-info {
-  width: 20%;
+  min-width: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
