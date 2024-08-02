@@ -1,7 +1,5 @@
 <?php
 
-require "../db/conn.php";
-
 function dd($dump)
 {
     echo '<pre>', print_r($dump, true), '</pre>';
@@ -19,7 +17,8 @@ function executeQuery($sql, $data)
     return $stmt;
 }
 
-// ------------------------------------------------ SELECT ALL -----------------------------------------------
+// ------------------------------------------------ SELECT FUNCTIONS -----------------------------------------------
+
 function selectAll($table, $conditions = [])
 {
     //Connection string to the DB
@@ -28,7 +27,7 @@ function selectAll($table, $conditions = [])
     //Sql query for a select all statement
     $sql = "SELECT * FROM $table";
 
-    //if there are no spwcified conditions, return everything
+    //if there are no specified conditions, return everything
     if (empty($conditions)) {
         $stmt = $conn->prepare($sql);
         $stmt->execute();
@@ -48,5 +47,93 @@ function selectAll($table, $conditions = [])
         $stmt = executeQuery($sql, $conditions);
         $records = $stmt->get_result()->fetch_all(MYSQLI_ASSOC); //get all records as an associative array
         return $records; //return them for use.
+    }
+}
+
+// ----------------------------------------------- COUNT ------------------------------------------------------
+
+function countAll($table, $conditions = []) {
+    global $conn;
+
+    // Base SQL query
+    $sql = "SELECT COUNT(*) as count FROM $table";
+
+    // Adding conditions if they exist
+    if (!empty($conditions)) {
+        $sql .= " WHERE ";
+        $conditionClauses = [];
+        foreach ($conditions as $column => $value) {
+            $conditionClauses[] = "$column = ?";
+        }
+        $sql .= implode(" AND ", $conditionClauses);
+    }
+
+    // Prepare statement
+    $stmt = $conn->prepare($sql);
+
+    // Bind parameters if conditions are provided
+    if (!empty($conditions)) {
+        $types = str_repeat('s', count($conditions));
+        $stmt->bind_param($types, ...array_values($conditions));
+    }
+
+    // Execute the query
+    $stmt->execute();
+
+    // Get the result
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    // Close the statement
+    $stmt->close();
+
+    // Return the count
+    return $row['count'];
+}
+
+function selectColumn($table, $column, $conditions = [], $singleRow = false) {
+    global $conn;
+
+    // Base SQL query
+    $sql = "SELECT $column FROM $table";
+
+    // Adding conditions if they exist
+    if (!empty($conditions)) {
+        $sql .= " WHERE ";
+        $conditionClauses = [];
+        foreach ($conditions as $column => $value) {
+            $conditionClauses[] = "$column = ?";
+        }
+        $sql .= implode(" AND ", $conditionClauses);
+    }
+
+    // Prepare statement
+    $stmt = $conn->prepare($sql);
+
+    // Bind parameters if conditions are provided
+    if (!empty($conditions)) {
+        $types = str_repeat('s', count($conditions));
+        $stmt->bind_param($types, ...array_values($conditions));
+    }
+
+    // Execute the query
+    $stmt->execute();
+
+    // Get the result
+    $result = $stmt->get_result();
+    
+    if ($singleRow) {
+        // Fetch a single row
+        $row = $result->fetch_assoc();
+        $stmt->close();
+        return $row[$column] ?? null; // Return null if column not found
+    } else {
+        // Fetch all rows
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row[$column] ?? null; // Return null if column not found
+        }
+        $stmt->close();
+        return $data;
     }
 }

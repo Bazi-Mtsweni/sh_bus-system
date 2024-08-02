@@ -43,6 +43,7 @@ html {
   --gold: #ffbc00;
   --hover-gold: #b18611;
   --red: #bc1402;
+  --hover-red: #741409;
   --text: #1e1e1e;
   --bg: #ffffff;
   --white: #ffffff;
@@ -157,6 +158,18 @@ a {
 .btn-gold:hover {
   background-color: var(--hover-gold);
   border: 3px solid var(--hover-gold);
+}
+.btn-red {
+  border: 3px solid var(--red);
+  background-color: var(--red);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  transition: background-color 300ms ease, border 300ms ease;
+}
+.btn-red:hover {
+  background-color: var(--hover-red);
+  border: 3px solid var(--hover-red);
 }
 .btn-secondary {
   border: 3px solid var(--blue);
@@ -317,6 +330,7 @@ header .notifications {
 header .notifications .fa-solid {
   color: var(--text);
   font-size: calc(var(--p) + 1rem);
+  margin: 0;
   cursor: pointer;
 }
 header .notifications .counter {
@@ -451,16 +465,21 @@ body.dark > header .theme-btn::before {
 
 nav {
   background-color: #002957;
-  width: 25%;
+  width: 70px;
   height: auto;
   border-radius: 0 25px 25px 0;
   overflow: clip;
+  transition: width 300ms ease;
+}
+nav.opened{
+  width: 350px;
 }
 nav .fa-solid {
   font-size: calc(var(--p) + 0.5rem);
   color: var(--white);
 }
 nav .title {
+  position: relative;
   background-color: var(--blue);
   color: var(--white);
   padding: 1rem 2rem;
@@ -468,11 +487,17 @@ nav .title {
   align-items: center;
   justify-content: flex-start;
 }
+nav .title .fa-solid {
+  cursor: pointer;
+}
 nav .title p {
   color: var(--white);
   font-weight: bold;
   font-size: calc(var(--p) + 0.3rem);
+  width: 100%;
   margin-left: 2rem;
+  opacity: 0;
+  transition: opacity 300ms ease;
 }
 nav ul {
   padding: 3rem 0;
@@ -483,7 +508,12 @@ nav ul li {
   justify-content: flex-start;
   width: 100%;
   padding: 1rem 2rem;
-  border-top: 2px solid #a6b5c3;
+}
+nav.opened .title p{
+  opacity: 1;
+}
+nav.opened ul li a{
+  opacity: 1;
 }
 nav ul li:hover{
     background-color: rgba(255, 255, 255, 0.15);
@@ -493,6 +523,8 @@ nav ul li a {
   text-align: left;
   font-size: calc(var(--p) + 0.2rem);
   margin-left: 2rem;
+  opacity: 0;
+  transition: opacity 300ms ease;
 }
 nav ul li.settings {
   margin-top: 5rem;

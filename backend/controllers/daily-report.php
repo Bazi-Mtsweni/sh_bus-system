@@ -33,7 +33,8 @@ function fetch_list($conn, $specific_date, $type, $search)
 
     $sql = "
     SELECT 
-        s.studentName, 
+        s.studentName,
+        s.studentId, 
         s.grade, 
         s.tel AS studentTel, 
         p.parentName, 
@@ -74,14 +75,37 @@ if ($result->num_rows > 0) {
                 <td>{$row['studentName']}</td>
                 <td>{$row['grade']}</td>
                 <td>{$row['studentTel']}</td>
-                <td>{$row['parentName']}</td>
-                <td>{$row['parentEmail']}</td>
                 <td>{$row['bus_name']}</td>
-                <td>{$row['capacity']}</td>
                 <td>{$row['morning_use']}</td>
                 <td>{$row['afternoon_use']}</td>
+                <td class='actions-cell'>" 
+                    . addActions($type, $row['studentId']) .
+                "</td>
               </tr>";
     }
 } else {
     echo "<tr><td colspan='9' style='text-align: center;'>No Records Found</td></tr>";
+}
+
+function addActions($type, $studentId) {
+    $actions = "";
+    switch ($type) {
+        case 'approved':
+            $actions = "
+                <button onclick='updateStatus(\"return_to_waiting\", {$studentId})' class='action btn-blue'><i class='fa-solid fa-hourglass-half'></i>Return To Waiting List</button>
+                <button onclick='updateStatus(\"decline_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-ban'></i>Remove Student</button>";
+            break;
+        case 'waiting':
+            $actions = "
+                <button onclick='updateStatus(\"approve_student\", {$studentId})' class='action btn-blue'><i class='fa-solid fa-check'></i>Approve Student</button>
+                <button onclick='updateStatus(\"decline_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-ban'></i>Decline Student</button>";
+            break;
+        case 'canceled':
+            $actions = "
+                <button onclick='updateStatus(\"remove_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-trash-can'></i></i>Delete Application</button>";
+            break;
+        default:
+            break;
+    }
+    return $actions;
 }

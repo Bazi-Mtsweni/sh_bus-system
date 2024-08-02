@@ -4,36 +4,41 @@ const body = document.body;
 // --------------------------------------- NAV SUB MENU TOGGLE ------------------------------------
 
 function toggleSubMenu(button) {
-    var menu = document.querySelector(".sub-menu." + button);
-    if (menu.classList.contains("active")) {
-      menu.classList.remove("active");
-    } else {
-      menu.classList.add("active");
-    }
+  var menu = document.querySelector(".sub-menu." + button);
+  if (menu.classList.contains("active")) {
+    menu.classList.remove("active");
+  } else {
+    menu.classList.add("active");
   }
-  function closeSubMenu(button) {
-    var menu = document.querySelector(".sub-menu." + button);
-    if (menu.classList.contains("active")) {
-      menu.classList.remove("active");
-    }
+}
+function closeSubMenu(button) {
+  var menu = document.querySelector(".sub-menu." + button);
+  if (menu.classList.contains("active")) {
+    menu.classList.remove("active");
   }
-  
-  const buttons = document.querySelectorAll("#dropdown-icon");
-  buttons.forEach(function (button) {
-    button.addEventListener("click", () => {
-      if (button.dataset.menu == "admin") {
-        closeSubMenu("notifications");
-        toggleSubMenu("admin");
-      }
-      if (button.dataset.menu == "notifications") {
-        closeSubMenu("admin");
-        toggleSubMenu("notifications");
-      }
-    });
+}
+
+const buttons = document.querySelectorAll("#dropdown-icon");
+buttons.forEach(function (button) {
+  button.addEventListener("click", () => {
+    if (button.dataset.menu == "admin") {
+      closeSubMenu("notifications");
+      toggleSubMenu("admin");
+    }
+    if (button.dataset.menu == "notifications") {
+      closeSubMenu("admin");
+      toggleSubMenu("notifications");
+    }
   });
+});
+
+// --------------------------------------- SIDENAV MENU TOGGLE ------------------------------------
+
+document.getElementById("sidenav-btn").addEventListener("click", () => {
+  document.getElementById("side-nav").classList.toggle("opened");
+});
 
 // --------------------------------------- DARK MODE HANDLER ------------------------------------
-
 
 // Check if a dark mode cookie exists
 const isDarkMode = getCookie("darkMode");
@@ -93,24 +98,33 @@ darkModeToggle.addEventListener("click", function () {
 
 // --------------------------------------- TABLE SEARCH BAR ------------------------------------
 
-document.addEventListener("DOMContentLoaded", function() {
-  const dailyReportController = "http://localhost/sh-bus-system/backend/controllers/daily-report.php";
+document.addEventListener("DOMContentLoaded", function () {
+  const dailyReportController =
+    "http://localhost/sh-bus-system/backend/controllers/daily-report.php";
   function fetchTableData(tableType, searchTerm = "") {
-    console.log(tableType);
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", dailyReportController + "?type=" + tableType + "&search=" + encodeURIComponent(searchTerm), true);
+    xhr.open(
+      "GET",
+      dailyReportController +
+        "?type=" +
+        tableType +
+        "&search=" +
+        encodeURIComponent(searchTerm),
+      true
+    );
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            document.getElementById(tableType + "-table-body").innerHTML = xhr.responseText;
-        }
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        document.getElementById(tableType + "-table-body").innerHTML =
+          xhr.responseText;
+      }
     };
     xhr.send();
   }
 
   function setupSearch(tableType) {
     var searchInput = document.getElementById(tableType + "-search");
-    searchInput.addEventListener("keyup", function() {
-        fetchTableData(tableType, this.value);
+    searchInput.addEventListener("keyup", function () {
+      fetchTableData(tableType, this.value);
     });
   }
 
@@ -124,31 +138,140 @@ document.addEventListener("DOMContentLoaded", function() {
   fetchTableData("canceled");
 });
 
+// ------------------------------------------- ACTION BUTTONS -------------------------------------------------
+
+function updateStatus(action, studentId) {
+  var xhr = new XMLHttpRequest();
+  const scriptsPath = "http://localhost/sh-bus-system/backend/scripts/";
+  xhr.open(
+    "GET",
+    scriptsPath +
+      "update-status.php?action=" +
+      action +
+      "&student_id=" +
+      studentId,
+    true
+  );
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText);
+      if (response.success) {
+        // Update the table row based on the response
+        updateTableRow(studentId, response.newStatus);
+        showAlert("success", response.message);
+        setTimeout(refreshPage, 1000);
+      } else {
+        showAlert("error", response.message);
+      }
+    }
+  };
+  xhr.send();
+}
+
+function refreshPage() {
+  location.reload();
+}
+
+function updateTableRow(studentId, newStatus) {
+  var row = document.querySelector('tr[data-student-id="' + studentId + '"]');
+  if (row) {
+    // Update the row based on the new status
+    row.querySelector(".status-cell").innerText = newStatus;
+    row.querySelector(".actions-cell").innerHTML = newActions(
+      newStatus,
+      studentId
+    );
+  }
+}
+
+function newActions(status, studentId) {
+  var actions = "";
+  switch (status) {
+    case "approved":
+      actions = `
+              <a href='#' onclick='updateStatus("return_to_waiting", ${studentId})' class='action btn-blue'><i class='fa-solid fa-hourglass-half'></i>Return To Waiting List</a>
+              <a href='#' onclick='updateStatus("remove_student", ${studentId})' class='action btn-red'><i class='fa-solid fa-ban'></i>Remove Student</a>`;
+      break;
+    case "waiting":
+      actions = `
+              <a href='#' onclick='updateStatus("approve_student", ${studentId})' class='action btn-blue'><i class='fa-solid fa-check'></i>Approve Student</a>
+              <a href='#' onclick='updateStatus("decline_student", ${studentId})' class='action btn-red'><i class='fa-solid fa-ban'></i>Decline Student</a>`;
+      break;
+    case "canceled":
+      actions = `
+              <a href='#' onclick='updateStatus("approve_student", ${studentId})' class='action btn-blue'><i class='fa-solid fa-check'></i>Approve Student</a>
+              <a href='#' onclick='updateStatus("add_to_waiting", ${studentId})' class='action btn-blue'><i class='fa-solid fa-hourglass-half'></i>Add To Waiting List</a>`;
+      break;
+    default:
+      break;
+  }
+  return actions;
+}
+
+// ------------------------------------------- ALERTS FUNCTIONS -----------------------------------------------
+
+function showAlertBox(type, message) {
+  var alertBox = document.getElementById("alert");
+  var messageBox = document.getElementById("alert-message");
+  var icon = document.getElementById("alert-icon");
+
+  alertBox.classList.add("show");
+  alertBox.classList.add(type);
+
+  if (type == "error") {
+    icon.classList.add("fa-circle-xmark");
+  } else {
+    icon.classList.add("fa-circle-check");
+  }
+
+  messageBox.innerHTML = message;
+}
+
+function hideAlertBox(type) {
+  var alertBox = document.getElementById("alert");
+  var messageBox = document.getElementById("alert-message");
+
+  alertBox.classList.remove("show");
+  alertBox.classList.remove(type);
+  messageBox.innerHTML = "";
+}
+
+function showAlert(type, message) {
+  const intervalId = setInterval(showAlertBox(type, message), 1000);
+
+  setTimeout(() => {
+    clearInterval(intervalId);
+    hideAlertBox(type);
+  }, 5000);
+}
+
 // ------------------------------------------- DOWNLOAD PDF ---------------------------------------------------
 
 async function downloadPDF(type) {
   const { jsPDF } = window.jspdf;
-  const content = document.getElementById(type + '-report');
+  const content = document.getElementById(type + "-report");
 
   // Use html2canvas to convert the content to a canvas image
-  html2canvas(content).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const doc = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-      });
+  html2canvas(content).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
 
-      const imgProps = doc.getImageProperties(imgData);
-      const pdfWidth = doc.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    const imgProps = doc.getImageProperties(imgData);
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      // Add the image to the PDF
-      doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      doc.save('document.pdf');
+    // Add the image to the PDF
+    doc.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    doc.save("document.pdf");
   });
 }
 
 function printReport() {
   window.print();
 }
+
+

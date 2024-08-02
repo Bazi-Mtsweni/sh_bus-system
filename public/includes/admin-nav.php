@@ -1,7 +1,7 @@
-<nav class="side-nav">
+<nav class="side-nav" id="side-nav">
     <div class="title">
-        <i class="fa-solid fa-bars"></i>
-        <p>Admin Menu</p>
+        <i id="sidenav-btn" class="fa-solid fa-bars" title="Menu"></i>
+        <p>Menu</p>
     </div>
     <ul>
         <li>
@@ -22,7 +22,7 @@
         </li>
         <li>
             <i class="fa-solid fa-ban"></i>
-            <a href="#">Cancelled Applications</a>
+            <a href="#">Cancelled</a>
         </li>
         <li>
             <i class="fa-solid fa-chart-simple"></i>

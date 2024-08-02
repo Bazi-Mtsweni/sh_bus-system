@@ -5,7 +5,7 @@ define('BASE_DIR', realpath(dirname(__FILE__) . '/../..'));
 require(BASE_DIR . '/config.php');
 require(ROOT_PATH . '/backend/db/conn.php');
 
-if (!isset($_SESSION["admin_id"])) { 
+if (!isset($_SESSION["admin_id"])) {
     header("Location: http://localhost/sh-bus-system/public");
 }
 
@@ -27,8 +27,12 @@ $date = date('j F Y');
 </head>
 
 <body class="">
-    <?php include(BASE_DIR . "/includes/admin-header.php"); ?>
-    <h2 class="intro">Welcome to admin, <?php echo $initials?></h2>
+    <?php
+    include(ROOT_PATH . "/backend/controllers/dashboard-data.php");
+    include(BASE_DIR . "/includes/admin-header.php");
+    include(BASE_DIR . "/includes/alerts.php");
+    ?>
+    <h2 class="intro">Welcome to admin, <?php echo $initials ?></h2>
     <section class="dash-nav">
         <?php include(BASE_DIR . "/includes/admin-nav.php"); ?>
         <div class="dashboard">
@@ -51,7 +55,7 @@ $date = date('j F Y');
                     <div class="image-container icon">
                         <img src="<?php echo BASE_URL . '/images/profile-picture.png'; ?>" alt="User Profile Image">
                     </div>
-                    <h3><?php echo $initials?></h3>
+                    <h3><?php echo $initials ?></h3>
                     <p>Super Admin</p>
                     <a href="#" class="button">Manage Profile</a>
                 </div>
@@ -60,37 +64,15 @@ $date = date('j F Y');
                     <div class="icon">
                         <i class="fa-solid fa-file-lines"></i>
                     </div>
-                    <h3>Applications</h3>
-                    <p>25</p>
+                    <h3>Total Applications</h3>
+                    <p><?php echo $all_applications; ?></p>
                     <a href="#" class="button">View Applications</a>
                 </div>
-                <div class="card waiting">
-                    <span class="bg"></span>
-                    <div class="icon">
-                        <i class="fa-solid fa-clock"></i>
-                    </div>
-                    <h3>Waiting</h3>
-                    <p>12</p>
-                    <a href="#" class="button"> More Details... </a>
-                </div>
-                <div class="card approved">
-                    <span class="bg"></span>
-                    <div class="icon">
-                        <i class="fa-solid fa-thumbs-up"></i>
-                    </div>
-                    <h3>Approved</h3>
-                    <p>12</p>
-                    <a href="#" class="button"> More Details... </a>
-                </div>
-                <div class="card cancelled">
-                    <span class="bg"></span>
-                    <div class="icon">
-                        <i class="fa-solid fa-ban"></i>
-                    </div>
-                    <h3>Cancelled</h3>
-                    <p>3</p>
-                    <a href="#" class="button"> More Details... </a>
-                </div>
+            </div>
+            <div id="daily-charts" class="charts">
+                <canvas class="chart" id="buses-chart" width="100px" height="100px"></canvas>
+                <canvas class="chart" id="students-chart" width="100px" height="100px"></canvas>
+                <canvas class="chart" id="statuses-chart" width="100px" height="100px"></canvas>
             </div>
         </div>
     </section>
@@ -109,12 +91,10 @@ $date = date('j F Y');
                         <th>Student Name</th>
                         <th>Grade</th>
                         <th>Contact Number</th>
-                        <th>Parent Name</th>
-                        <th>Parent Email</th>
                         <th>Bus Name</th>
-                        <th>Bus Capacity</th>
                         <th>Morning Use</th>
                         <th>Afternoon Use</th>
+                        <th class="table-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="waiting-table-body">
@@ -134,12 +114,10 @@ $date = date('j F Y');
                         <th>Student Name</th>
                         <th>Grade</th>
                         <th>Contact Number</th>
-                        <th>Parent Name</th>
-                        <th>Parent Email</th>
                         <th>Bus Name</th>
-                        <th>Bus Capacity</th>
                         <th>Morning Use</th>
                         <th>Afternoon Use</th>
+                        <th class="table-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="approved-table-body">
@@ -159,12 +137,10 @@ $date = date('j F Y');
                         <th>Student Name</th>
                         <th>Grade</th>
                         <th>Contact Number</th>
-                        <th>Parent Name</th>
-                        <th>Parent Email</th>
                         <th>Bus Name</th>
-                        <th>Bus Capacity</th>
                         <th>Morning Use</th>
                         <th>Afternoon Use</th>
+                        <th class="table-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="canceled-table-body">
@@ -183,7 +159,112 @@ $date = date('j F Y');
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="<?php echo BASE_URL . "/js/admin.js"; ?>"></script>
+    <script>
+        // Graphs
+
+        const buses = document.getElementById("buses-chart");
+        const students = document.getElementById("students-chart");
+        const statuses = document.getElementById("statuses-chart");
+
+        const busCapacity = [];
+        <?php foreach ($bus_capacities as $key => $capacity){ ?>
+            busCapacity.push('<?php echo $capacity; ?>');
+        <?php }; ?>
+
+        new Chart(buses, {
+            type: "bar",
+            data: {
+                labels: ["Bus 1", "Bus 2", "Bus 3"],
+                datasets: [{
+                        label: "Bus Capacity",
+                        data: busCapacity,
+                        borderWidth: 1,
+                    },
+                    {
+                        label: "Number of Students",
+                        data: [22, 4, 13],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Total Number Of Students Per Bus",
+                    },
+                },
+            },
+        });
+
+        new Chart(students, {
+            type: "pie",
+            data: {
+                labels: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+                datasets: [{
+                    label: "Students Using The Bus",
+                    data: [20, 8, 15, 10, 5],
+                    borderWidth: 1,
+                }, ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Approved Students per Grade",
+                    },
+                },
+            },
+        });
+
+        new Chart(statuses, {
+            type: "line",
+            data: {
+                labels: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+                datasets: [{
+                        label: "Approved Students",
+                        data: [10, 2, 5, 8, 5],
+                        borderWidth: 1,
+                    },
+                    {
+                        label: "Waiting Students",
+                        data: [9, 6, 2, 2, 0],
+                        borderWidth: 1,
+                    },
+                    {
+                        label: "Canceled Students",
+                        data: [1, 0, 8, 0, 0],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Student Statuses Per Grade",
+                    },
+                },
+            },
+        });
+    </script>
 </body>
 
 </html>
