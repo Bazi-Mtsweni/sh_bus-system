@@ -7,7 +7,7 @@
     <h3>Delete Application</h3>
     <p>This will permanently delete the application, the user will have to re-apply.<br><br> Do you wish to continue?</p>
     <div class="modal-actions">
-        <button class="btn-red"><i class='fa-solid fa-trash-can'></i>Delete</button>
-        <button class="btn-black">Cancel</button>
+        <button id="delete-btn" class="btn-red"><i class='fa-solid fa-trash-can'></i>Delete</button>
+        <button class="btn-black" onclick="closeModal();">Cancel</button>
     </div>
 </div>

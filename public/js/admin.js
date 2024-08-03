@@ -253,6 +253,27 @@ function showAlert(type, message) {
   }, 5000);
 }
 
+// ------------------------------------------- DELETE MODAL ---------------------------------------------------
+function showModal(studentID) {
+  const modal = document.getElementById("delete-modal");
+  const ID = studentID;
+  localStorage.setItem("student-ID", ID);
+  modal.classList.add("opened");
+}
+
+function deleteApplication(studentId) {
+  studentId = localStorage.getItem("student-ID");
+  updateStatus("remove_student", studentId);
+}
+
+function closeModal() {
+  const modal = document.getElementById("delete-modal");
+  modal.classList.remove("opened");
+  localStorage.removeItem("student-ID");
+}
+
+
+
 // ------------------------------------------- DOWNLOAD PDF ---------------------------------------------------
 
 async function downloadPDF(type) {

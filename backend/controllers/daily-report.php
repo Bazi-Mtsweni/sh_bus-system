@@ -102,10 +102,33 @@ function addActions($type, $studentId) {
             break;
         case 'canceled':
             $actions = "
-                <button onclick='updateStatus(\"remove_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-trash-can'></i>Delete Application</button>";
+                <button onclick='showModal({$studentId})' class='action btn-red'><i class='fa-solid fa-trash-can'></i>Delete Application</button>";
             break;
         default:
             break;
     }
     return $actions;
 }
+
+// function addActions($type, $studentId) {
+//     $actions = "";
+//     switch ($type) {
+//         case 'approved':
+//             $actions = "
+//                 <button onclick='updateStatus(\"return_to_waiting\", {$studentId})' class='action btn-blue'><i class='fa-solid fa-hourglass-half'></i>Return To Waiting List</button>
+//                 <button onclick='updateStatus(\"decline_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-ban'></i>Remove Student</button>";
+//             break;
+//         case 'waiting':
+//             $actions = "
+//                 <button onclick='updateStatus(\"approve_student\", {$studentId})' class='action btn-blue'><i class='fa-solid fa-check'></i>Approve Student</button>
+//                 <button onclick='updateStatus(\"decline_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-ban'></i>Decline Student</button>";
+//             break;
+//         case 'canceled':
+//             $actions = "
+//                 <button onclick='updateStatus(\"remove_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-trash-can'></i>Delete Application</button>";
+//             break;
+//         default:
+//             break;
+//     }
+//     return $actions;
+// }

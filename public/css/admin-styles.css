@@ -59,6 +59,7 @@ html {
 }
 body.dark {
   --text: #a6b5c3;
+  --hover-text: #56606b;
   --bg: #040c14;
   --blue: #2c4b61;
   --gold: #d49c00;

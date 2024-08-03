@@ -215,11 +215,6 @@ $date = date('j F Y');
                 }, ],
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
-                },
                 plugins: {
                     title: {
                         display: true,
