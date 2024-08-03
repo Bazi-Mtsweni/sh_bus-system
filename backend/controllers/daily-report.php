@@ -102,7 +102,7 @@ function addActions($type, $studentId) {
             break;
         case 'canceled':
             $actions = "
-                <button onclick='updateStatus(\"remove_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-trash-can'></i></i>Delete Application</button>";
+                <button onclick='updateStatus(\"remove_student\", {$studentId})' class='action btn-red'><i class='fa-solid fa-trash-can'></i>Delete Application</button>";
             break;
         default:
             break;

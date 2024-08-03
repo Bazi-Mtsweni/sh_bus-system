@@ -2,3 +2,12 @@
     <i id="alert-icon" class="fa-solid"></i>
     <p id="alert-message"></p>
 </div>
+
+<div id="delete-modal" class="modal">
+    <h3>Delete Application</h3>
+    <p>This will permanently delete the application, the user will have to re-apply.<br><br> Do you wish to continue?</p>
+    <div class="modal-actions">
+        <button class="btn-red"><i class='fa-solid fa-trash-can'></i>Delete</button>
+        <button class="btn-black">Cancel</button>
+    </div>
+</div>

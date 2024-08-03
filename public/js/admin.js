@@ -98,45 +98,57 @@ darkModeToggle.addEventListener("click", function () {
 
 // --------------------------------------- TABLE SEARCH BAR ------------------------------------
 
-document.addEventListener("DOMContentLoaded", function () {
-  const dailyReportController =
-    "http://localhost/sh-bus-system/backend/controllers/daily-report.php";
-  function fetchTableData(tableType, searchTerm = "") {
-    var xhr = new XMLHttpRequest();
-    xhr.open(
-      "GET",
-      dailyReportController +
-        "?type=" +
-        tableType +
-        "&search=" +
-        encodeURIComponent(searchTerm),
-      true
-    );
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        document.getElementById(tableType + "-table-body").innerHTML =
-          xhr.responseText;
-      }
-    };
-    xhr.send();
-  }
+const dailyReportController =
+  "http://localhost/sh-bus-system/backend/controllers/daily-report.php";
 
-  function setupSearch(tableType) {
-    var searchInput = document.getElementById(tableType + "-search");
-    searchInput.addEventListener("keyup", function () {
-      fetchTableData(tableType, this.value);
-    });
-  }
+function fetchTableData(tableType, searchTerm = "") {
+  var xhr = new XMLHttpRequest();
+  xhr.open(
+    "GET",
+    dailyReportController +
+      "?type=" +
+      tableType +
+      "&search=" +
+      encodeURIComponent(searchTerm),
+    true
+  );
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      document.getElementById(tableType + "-table-body").innerHTML =
+        xhr.responseText;
+    }
+  };
+  xhr.send();
+}
 
-  setupSearch("waiting");
-  setupSearch("approved");
-  setupSearch("canceled");
+function setupSearch(tableType) {
+  var searchInput = document.getElementById(tableType + "-search");
+  searchInput.addEventListener("keyup", function () {
+    fetchTableData(tableType, this.value);
+  });
+}
 
-  // Initial fetch without searching
+// UNCOMMENT WHEN DOING NOTIFICATIONS
+// setInterval(function () {
+//   fetchTableData("waiting");
+//   fetchTableData("approved");
+//   fetchTableData("canceled");
+// }, 1000);
+
+// Initial fetch without searching
+function refreshData() {
   fetchTableData("waiting");
   fetchTableData("approved");
   fetchTableData("canceled");
-});
+}
+
+document.addEventListener("DOMContentLoaded", refreshData);
+
+setupSearch("waiting");
+setupSearch("approved");
+setupSearch("canceled");
+
+
 
 // ------------------------------------------- ACTION BUTTONS -------------------------------------------------
 
@@ -158,18 +170,14 @@ function updateStatus(action, studentId) {
       if (response.success) {
         // Update the table row based on the response
         updateTableRow(studentId, response.newStatus);
+        refreshData();
         showAlert("success", response.message);
-        setTimeout(refreshPage, 1000);
       } else {
         showAlert("error", response.message);
       }
     }
   };
   xhr.send();
-}
-
-function refreshPage() {
-  location.reload();
 }
 
 function updateTableRow(studentId, newStatus) {
@@ -273,5 +281,3 @@ async function downloadPDF(type) {
 function printReport() {
   window.print();
 }
-
-
