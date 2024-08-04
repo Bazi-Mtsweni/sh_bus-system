@@ -169,8 +169,25 @@ $date = date('j F Y');
         const statuses = document.getElementById("statuses-chart");
 
         const busCapacity = [];
+        const busStudents = [];
+        const approvedStudentsPerGrade = [];
+        const waitingStudentsPerGrade = [];
+        const canceledStudentsPerGrade = [];
+
         <?php foreach ($bus_capacities as $key => $capacity){ ?>
             busCapacity.push('<?php echo $capacity; ?>');
+        <?php }; ?>
+        <?php foreach ($total_approved_students as $bus_data){ ?>
+            busStudents.push('<?php echo $bus_data["total_approved_students"]; ?>');
+        <?php }; ?>
+        <?php foreach (dataPerGrade($approved_students) as $total_students){ ?>
+            approvedStudentsPerGrade.push('<?php echo $total_students; ?>');
+        <?php }; ?>
+        <?php foreach (dataPerGrade($waiting_students) as $total_students){ ?>
+            waitingStudentsPerGrade.push('<?php echo $total_students; ?>');
+        <?php }; ?>
+        <?php foreach (dataPerGrade($canceled_students) as $total_students){ ?>
+            canceledStudentsPerGrade.push('<?php echo $total_students; ?>');
         <?php }; ?>
 
         new Chart(buses, {
@@ -184,7 +201,7 @@ $date = date('j F Y');
                     },
                     {
                         label: "Number of Students",
-                        data: [22, 4, 13],
+                        data: busStudents,
                         borderWidth: 1,
                     },
                 ],
@@ -210,7 +227,7 @@ $date = date('j F Y');
                 labels: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
                 datasets: [{
                     label: "Students Using The Bus",
-                    data: [20, 8, 15, 10, 5],
+                    data: approvedStudentsPerGrade,
                     borderWidth: 1,
                 }, ],
             },
@@ -230,17 +247,17 @@ $date = date('j F Y');
                 labels: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
                 datasets: [{
                         label: "Approved Students",
-                        data: [10, 2, 5, 8, 5],
+                        data: approvedStudentsPerGrade,
                         borderWidth: 1,
                     },
                     {
                         label: "Waiting Students",
-                        data: [9, 6, 2, 2, 0],
+                        data: waitingStudentsPerGrade,
                         borderWidth: 1,
                     },
                     {
                         label: "Canceled Students",
-                        data: [1, 0, 8, 0, 0],
+                        data: canceledStudentsPerGrade,
                         borderWidth: 1,
                     },
                 ],

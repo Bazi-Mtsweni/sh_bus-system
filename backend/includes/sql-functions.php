@@ -52,7 +52,8 @@ function selectAll($table, $conditions = [])
 
 // ----------------------------------------------- COUNT ------------------------------------------------------
 
-function countAll($table, $conditions = []) {
+function countAll($table, $conditions = [])
+{
     global $conn;
 
     // Base SQL query
@@ -91,7 +92,8 @@ function countAll($table, $conditions = []) {
     return $row['count'];
 }
 
-function selectColumn($table, $column, $conditions = [], $singleRow = false) {
+function selectColumn($table, $column, $conditions = [], $singleRow = false)
+{
     global $conn;
 
     // Base SQL query
@@ -121,7 +123,7 @@ function selectColumn($table, $column, $conditions = [], $singleRow = false) {
 
     // Get the result
     $result = $stmt->get_result();
-    
+
     if ($singleRow) {
         // Fetch a single row
         $row = $result->fetch_assoc();
@@ -136,4 +138,63 @@ function selectColumn($table, $column, $conditions = [], $singleRow = false) {
         $stmt->close();
         return $data;
     }
+}
+
+function countBusStudents(){
+    global $conn;
+
+    $sql = "
+    SELECT
+        b.busId,
+        b.bus_number,
+        b.bus_name,
+        COUNT(r.registrationId) AS total_approved_students
+    FROM
+        buses b
+    LEFT JOIN
+        registrations r ON b.busId = r.busId AND r.approved = TRUE
+    GROUP BY
+        b.busId, b.bus_number, b.bus_name;
+    ";
+
+    $result = $conn->query($sql);
+
+    // Initialize an array to hold the data
+    $busData = array();
+
+    // Check if the query returns any results
+    if ($result->num_rows > 0) {
+        // Fetch all the rows and store them in the array
+        while ($row = $result->fetch_assoc()) {
+            $busData[] = $row;
+        }
+    } else {
+        echo "0 results";
+    }
+
+    return $busData;
+}
+
+function getStudentsPerGrade($condition)
+{
+    global $conn;
+    
+    $sql = "
+    SELECT
+        s.grade,
+        COUNT(r.registrationId) AS total_students
+    FROM
+        students s
+    LEFT JOIN
+        registrations r ON s.studentId = r.studentId
+    WHERE
+        r.$condition = TRUE
+    GROUP BY
+        s.grade;
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $records = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    return $records;
 }

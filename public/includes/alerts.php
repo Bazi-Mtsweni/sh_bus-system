@@ -3,7 +3,7 @@
     <p id="alert-message"></p>
 </div>
 
-<div id="delete-modal" class="modal">
+<div id="delete-modal" class="modal" style="display: none;">
     <h3>Delete Application</h3>
     <p>This will permanently delete the application, the user will have to re-apply.<br><br> Do you wish to continue?</p>
     <div class="modal-actions">
