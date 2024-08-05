@@ -46,6 +46,7 @@ $date = date('j F Y');
             </div>
             <div id="weekly-charts" class="charts">
                 <canvas class="chart pie" id="approvedStudentsPieChart"></canvas>
+                <canvas class="chart" id="busUsageChart"></canvas>
             </div>
         </div>
     </section>
@@ -140,6 +141,7 @@ $date = date('j F Y');
     <script>
         const ctx = document.getElementById('weeklyReportChart').getContext('2d');
         const pieCtx = document.getElementById('approvedStudentsPieChart').getContext('2d');
+        const busUsageCtx = document.getElementById('busUsageChart').getContext('2d');
 
         const weeklyReportChart = new Chart(ctx, {
             type: 'bar',
@@ -218,6 +220,40 @@ $date = date('j F Y');
                         text: "Approved Students Per Grade - Last 7 Days",
                         display: true 
                     }  
+                }
+            }
+        });
+
+        const busUsageChart = new Chart(busUsageCtx, {
+            type: 'bar',
+            data: {
+                labels: <?php echo json_encode($busNames); ?>,
+                datasets: [
+                    {
+                        label: 'Morning Use',
+                        data: <?php echo json_encode($morningUse); ?>,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Afternoon Use',
+                        data: <?php echo json_encode($afternoonUse); ?>,
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
         });

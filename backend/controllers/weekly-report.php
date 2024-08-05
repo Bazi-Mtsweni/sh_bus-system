@@ -171,10 +171,54 @@ function WeeklyApprovedDataPerGrade()
     return $data;
 }
 
+function fetch_bus_usage($conn)
+{
+    $sql = "
+    SELECT 
+        b.bus_name,
+        SUM(CASE WHEN r.morning_pickup_number IS NOT NULL THEN 1 ELSE 0 END) AS morning_use,
+        SUM(CASE WHEN r.afternoon_dropoff_number IS NOT NULL THEN 1 ELSE 0 END) AS afternoon_use
+    FROM 
+        registrations reg
+    JOIN 
+        buses b ON reg.busId = b.busId
+    JOIN 
+        routes r ON b.route_id = r.route_id
+    WHERE 
+        reg.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND reg.approved = TRUE 
+    GROUP BY 
+        b.bus_name
+    ORDER BY 
+        b.bus_name;
+    ";
+
+    $result = $conn->query($sql);
+    $data = array();
+
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    return $data;
+}
+
+
+
 //Call functions to return data
 $approvedDataPerGrade = WeeklyApprovedDataPerGrade();
 $approvedData = getWeeklyData('approved');
 $waitingData = getWeeklyData('waiting');
+$busUsageData = fetch_bus_usage($conn);
+
+$busNames = [];
+$morningUse = [];
+$afternoonUse = [];
+
+foreach ($busUsageData as $data) {
+    $busNames[] = $data['bus_name'];
+    $morningUse[] = $data['morning_use'];
+    $afternoonUse[] = $data['afternoon_use'];
+}
 
 // Create an array of the past 7 days
 $days = array();

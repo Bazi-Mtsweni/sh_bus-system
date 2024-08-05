@@ -170,6 +170,11 @@
   .dashboard .chart{
     width: 100% !important;
     height: auto !important;
+    margin-bottom: 2rem;
+  }
+  .dashboard .chart.pie{
+    width: 350px !important;
+    height: auto !important;
   }
   .report-table {
     width: 95%;
