@@ -99,12 +99,8 @@ function login(e) {
     document.getElementById("tel"),
     "tel-error"
   );
-  let idNumber = validateRSAID(
-    document.getElementById("id"),
-    "id-error"
-  );
 
-  if (name && tel && idNumber) {
+  if (name && tel) {
     // Get grade
     let grade = document.getElementById("grade").value;
 
@@ -113,8 +109,7 @@ function login(e) {
       SERVER + "scripts/learner.php",
       { name: "name", value: name },
       { name: "tel", value: tel },
-      { name: "grade", value: grade },
-      { name: "id-number", value: idNumber }
+      { name: "grade", value: grade }
     );
   } else {
     showAlert("error", "Please fix all errors and try again");

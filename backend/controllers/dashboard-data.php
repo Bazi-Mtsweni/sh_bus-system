@@ -19,3 +19,4 @@ function dataPerGrade($rawData){
 
     return $grades;
 };
+

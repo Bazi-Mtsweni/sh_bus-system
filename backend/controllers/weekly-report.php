@@ -1,13 +1,11 @@
 <?php
 
-require realpath(dirname(__DIR__)) . '/../public/config.php';
-require ROOT_PATH . '/backend/db/conn.php';
+require realpath(dirname(__DIR__)) . '/db/conn.php';
 
-$specific_date = '2024-07-18'; //This is for the DB function for development - to be changed later
+$specific_date = '2024-08-05'; //This is for the DB function for development - to be changed later
 $type = isset($_GET['type']) ? $_GET['type'] : '';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Function to fetch lists based on type (approved, waiting, canceled)
 function fetch_list($conn, $specific_date, $type, $search)
 {
     $condition = '';
@@ -22,7 +20,7 @@ function fetch_list($conn, $specific_date, $type, $search)
             $condition = "reg.canceled = TRUE AND reg.approved = FALSE AND reg.waiting = FALSE";
             break;
         default:
-            'Couldn&apos;t GET table type';
+            return 'Couldn&apos;t GET table type';
     }
 
     $search_condition = '';
@@ -48,7 +46,8 @@ function fetch_list($conn, $specific_date, $type, $search)
         CASE 
             WHEN r.afternoon_dropoff_number IS NOT NULL THEN 'Yes' 
             ELSE 'No' 
-        END AS afternoon_use
+        END AS afternoon_use,
+        DATE(reg.date) AS reg_date
     FROM 
         registrations reg
     JOIN 
@@ -60,10 +59,10 @@ function fetch_list($conn, $specific_date, $type, $search)
     JOIN 
         routes r ON b.route_id = r.route_id
     WHERE 
-        reg.date = CURDATE() AND $condition $search_condition
+        reg.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND $condition $search_condition
     ORDER BY 
         s.studentName
-"; //Use CURDATE() when done for date
+    ";
 
     return $conn->query($sql);
 }
@@ -78,7 +77,8 @@ if ($result->num_rows > 0) {
                 <td>{$row['bus_name']}</td>
                 <td>{$row['morning_use']}</td>
                 <td>{$row['afternoon_use']}</td>
-                <td class='actions-cell'>" 
+                <td>{$row['reg_date']}</td>
+                <td class='actions-cell'>"
                     . addActions($type, $row['studentId']) .
                 "</td>
               </tr>";
@@ -108,4 +108,100 @@ function addActions($type, $studentId) {
             break;
     }
     return $actions;
+}
+
+
+function getWeeklyData($status)
+{
+    global $conn;
+
+    $sql = "
+    SELECT
+        DATE(r.date) AS day,
+        COUNT(r.registrationId) AS total_students
+    FROM
+        registrations r
+    WHERE
+        r.$status = TRUE AND
+        r.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    GROUP BY
+        DATE(r.date)
+    ORDER BY
+        DATE(r.date);
+    ";
+
+    $result = $conn->query($sql);
+    $data = array();
+
+    while ($row = $result->fetch_assoc()) {
+        $data[$row['day']] = $row['total_students'];
+    }
+
+    return $data;
+}
+
+function WeeklyApprovedDataPerGrade()
+{
+    global $conn;
+
+    $sql = "
+    SELECT
+        s.grade,
+        COUNT(r.registrationId) AS total_students
+    FROM
+        students s
+    LEFT JOIN
+        registrations r ON s.studentId = r.studentId
+    WHERE
+        r.approved = TRUE AND
+        r.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+    GROUP BY
+        s.grade
+    ORDER BY
+        s.grade;
+    ";
+
+    $result = $conn->query($sql);
+    $data = array();
+
+    while ($row = $result->fetch_assoc()) {
+        $data[$row['grade']] = $row['total_students'];
+    }
+
+    return $data;
+}
+
+//Call functions to return data
+$approvedDataPerGrade = WeeklyApprovedDataPerGrade();
+$approvedData = getWeeklyData('approved');
+$waitingData = getWeeklyData('waiting');
+
+// Create an array of the past 7 days
+$days = array();
+for ($i = 0; $i < 7; $i++) {
+    $days[] = date('Y-m-d', strtotime("-$i days"));
+}
+$days = array_reverse($days);
+
+// Initialize data arrays for approved and waiting students
+$approvedStudents = array_fill(0, 7, 0);
+$waitingStudents = array_fill(0, 7, 0);
+
+foreach ($days as $index => $day) {
+    if (isset($approvedData[$day])) {
+        $approvedStudents[$index] = $approvedData[$day];
+    }
+    if (isset($waitingData[$day])) {
+        $waitingStudents[$index] = $waitingData[$day];
+    }
+}
+
+// Initialize data arrays for grades and counts
+$grades = ['8', '9', '10', '11', '12'];
+$approvedStudentsPerGrade = array_fill(0, 5, 0);
+
+foreach ($grades as $index => $grade) {
+    if (isset($approvedDataPerGrade[$grade])) {
+        $approvedStudentsPerGrade[$index] = $approvedDataPerGrade[$grade];
+    }
 }

@@ -1,0 +1,280 @@
+.daily-report .fa-solid {
+    font-size: calc(var(--p) + 0.2rem);
+    margin-right: 1rem;
+  }
+  button{
+    cursor: pointer;
+  }
+  
+  .dash-nav {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    padding-right: 5%;
+  }
+  .intro {
+    color: var(--blue);
+    margin: 3rem auto;
+    text-align: center;
+    width: 100%;
+  }
+  .dashboard {
+    position: relative;
+    width: 100%;
+  }
+  .actions {
+    margin-bottom: 1rem;
+  }
+  .actions button {
+    background-color: var(--blue);
+    color: white;
+    padding: 0.75rem 1rem;
+    margin-right: 0.5rem;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 300ms ease;
+  }
+  .actions button:hover {
+    background-color: var(--hover-blue);
+  }
+  .dashboard .cards {
+    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .dashboard .cards .card {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    border-radius: 25px;
+    background-color: var(--text);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .dashboard .cards .card .bg {
+    position: absolute;
+    top: 1.5rem;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--bg);
+  }
+  .dashboard .cards .card .icon {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin: 1rem auto;
+    background-color: var(--bg);
+    color: var(--text);
+    border: 5px solid var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .dashboard .cards .card .icon .fa-solid {
+    font-size: calc(var(--p) + 1rem);
+    margin: 0;
+  }
+  
+  .dashboard .cards .card p {
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-top: 0.5rem;
+  }
+  .dashboard .cards .card .button {
+    border: 3px solid var(--white);
+    background-color: transparent;
+    padding: 0.75rem 1rem;
+    margin-top: 1rem;
+    border-radius: 7px;
+    color: var(--white);
+  }
+  .dashboard .cards .card.applications {
+    background-color: #002957;
+    color: var(--white);
+  }
+  .dashboard .cards .card.applications .icon {
+    background-color: #acd0fa;
+    border-color: #002957;
+    color: #002957;
+  }
+  .dashboard .cards .card.applications .bg {
+    background-color: #acd0fa;
+  }
+  .dashboard .cards .card.waiting {
+    background-color: var(--gold);
+    color: var(--white);
+  }
+  .dashboard .cards .card.waiting .icon {
+    background-color: #ffe8a7;
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .dashboard .cards .card.waiting .bg {
+    background-color: #ffe8a7;
+  }
+  .dashboard .cards .card.approved {
+    background-color: var(--green);
+    color: var(--white);
+  }
+  .dashboard .cards .card.approved .icon {
+    background-color: #51ff51;
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .dashboard .cards .card.approved .bg {
+    background-color: #51ff51;
+  }
+  .dashboard .cards .card.cancelled {
+    background-color: var(--red);
+    color: var(--white);
+  }
+  .dashboard .cards .card.cancelled .icon {
+    background-color: #ff7263;
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .dashboard .cards .card.cancelled .bg {
+    background-color: #ff7263;
+  }
+  .dashboard .cards .card.user-profile {
+    background-color: var(--blue);
+    border-color: var(--white);
+    color: var(--white);
+  }
+  .dashboard .cards .card.user-profile .icon {
+    border-color: var(--blue);
+  }
+  .dashboard .charts{
+    min-width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 50px;
+    margin: 3rem 0;
+  }
+  
+  .dashboard .chart{
+    width: 100% !important;
+    height: auto !important;
+  }
+  .report-table {
+    width: 95%;
+    background-color: var(--bg);
+    box-shadow: var(--shadow);
+    border-radius: 25px;
+    padding: 5%;
+    margin: 3rem auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .report-table h2 {
+    color: var(--blue);
+    text-align: center;
+    width: 100%;
+    margin: 1rem 0 3rem;
+  }
+  .report-table h3 {
+    color: var(--blue);
+    margin-bottom: 1rem;
+  }
+  .report-table .search {
+    width: 30%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border: 2px solid var(--text);
+    margin: 0.5rem 0;
+    border-radius: 7px;
+    overflow: clip;
+  }
+  .report-table .search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0.5rem;
+    font-family: "Roboto", sans-serif;
+    font-size: 0.75rem;
+  }
+  .report-table .search .fa-solid {
+    width: 15%;
+    height: 100%;
+    text-align: center;
+    padding: 0.6rem 0;
+    margin: 0;
+    background-color: var(--blue);
+    color: var(--white);
+    cursor: pointer;
+  }
+  .report-table .search .fa-solid:hover {
+    background-color: var(--hover-blue);
+  }
+  .report-table table th {
+    background-color: #002957;
+    color: var(--white);
+  }
+  .report-table table .actions-cell {
+    text-align: center;
+  }
+  .report-table .actions .fa-solid {
+    font-size: calc(var(--p) + 0.2rem);
+    margin-right: 1rem;
+  }
+  .report-table .table-actions{
+    text-align: center;
+  }
+  
+  /* ------------------------------------ PRINT STYLES -------------------------------------------------- */
+  
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+  @media print {
+    body {
+      width: 210mm;
+      height: 297mm;
+      font-size: 12pt;
+      display: block;
+      padding: 0;
+      margin: 0;
+      background-color: #ffffff;
+    }
+    body, table, th, tr,td{
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .daily-report {
+      width: auto;
+      height: auto;
+      margin: 0;
+      box-shadow: none;
+    }
+    .dash-nav,
+    footer,
+    header,
+    .actions,
+    .intro,
+    .daily-report .search,
+    .table-actions,
+    .actions-cell {
+      display: none;
+    }
+  }
+  
+  /* ------------------------------------ PRINT STYLES -------------------------------------------------- */
+  

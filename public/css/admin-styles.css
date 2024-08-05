@@ -616,6 +616,7 @@ td{
 footer{
   width: 100%;
   position: relative;
+  margin-top: 3rem;
 }
 footer .logo-nav{
   width: 100%;

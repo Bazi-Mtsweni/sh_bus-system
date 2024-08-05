@@ -98,14 +98,30 @@ darkModeToggle.addEventListener("click", function () {
 
 // --------------------------------------- TABLE SEARCH BAR ------------------------------------
 
-const dailyReportController =
-  "http://localhost/sh-bus-system/backend/controllers/daily-report.php";
+const dailyReportController = "http://localhost/sh-bus-system/backend/controllers/daily-report.php";
+const weeklyReportController = "http://localhost/sh-bus-system/backend/controllers/weekly-report.php";
+
+function getReportController() {
+  //Get the window URL, split it into an array by "/" and take out the last array item which is the file name (file.php)
+  const currPage = window.location.pathname.split('/').pop(); 
+
+  switch (currPage) {
+    case "daily-report.php":
+      return dailyReportController;
+    case "weekly-report.php":
+      return weeklyReportController;
+    default: showAlert("error", "Couldn't fetch data, please try again");
+      break;
+  }
+}
 
 function fetchTableData(tableType, searchTerm = "") {
+  const reportController = getReportController();
+
   var xhr = new XMLHttpRequest();
   xhr.open(
     "GET",
-    dailyReportController +
+    reportController +
       "?type=" +
       tableType +
       "&search=" +

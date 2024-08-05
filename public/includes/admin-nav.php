@@ -6,27 +6,23 @@
     <ul>
         <li>
             <i class="fa-solid fa-border-all"></i>
-            <a href="#">Dashboard</a>
+            <a href="<?php echo BASE_URL . '/views/admin/admin-dashboard.php'; ?>">Dashboard</a>
         </li>
         <li>
             <i class="fa-solid fa-file-lines"></i>
             <a href="#">Applications</a>
         </li>
         <li>
-            <i class="fa-solid fa-clock"></i>
-            <a href="#">Waiting List</a>
-        </li>
-        <li>
-            <i class="fa-solid fa-thumbs-up"></i>
-            <a href="#">Approved List</a>
-        </li>
-        <li>
-            <i class="fa-solid fa-ban"></i>
-            <a href="#">Cancelled</a>
+            <i class="fa-solid fa-chart-simple"></i>
+            <a href="<?php echo BASE_URL . '/views/admin/daily-report.php'; ?>">Daily Report</a>
         </li>
         <li>
             <i class="fa-solid fa-chart-simple"></i>
-            <a href="#">MIS Reports</a>
+            <a href="<?php echo BASE_URL . '/views/admin/weekly-report.php'; ?>">Weekly Report</a>
+        </li>
+        <li>
+            <i class="fa-solid fa-chart-simple"></i>
+            <a href="#">Monthly Report</a>
         </li>
         <li>
             <i class="fa-solid fa-user-group"></i>
@@ -38,7 +34,7 @@
         </li>
         <li>
             <i class="fa-solid fa-right-from-bracket"></i>
-            <a href="<?php echo BASE_URL. '/../backend/scripts/logout.php';?>">Sign Out</a>
+            <a href="<?php echo BASE_URL . '/../backend/scripts/logout.php'; ?>">Sign Out</a>
         </li>
     </ul>
 </nav>

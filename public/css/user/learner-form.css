@@ -1,25 +1,38 @@
-.form-section{
-    position: relative;
-    margin: auto;
-    margin-top: -5rem;
-    z-index: 899;
-    width: 60%;
+.form-section {
+  position: relative;
+  margin: auto;
+  margin-top: -5rem;
+  z-index: 899;
+  width: 60%;
 }
 .form-section form h2 {
-    width: 100%;
-    text-align: center;
-    font-weight: 900;
-    color: var(--blue);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  width: 100%;
+  text-align: center;
+  font-weight: 900;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .form-section form h2 span {
-    font-size: calc(var(--h2) - var(--p));
-    color: var(--text);
-    margin-left: 1rem;
-  }
+  font-size: calc(var(--h2) - var(--p));
+  color: var(--text);
+  margin-left: 1rem;
+}
 
-  .btn-blue{
-    min-width: 20%;
-  }
+.btn-blue {
+  min-width: 20%;
+}
+
+/* ------------------------------------------------- BUS FORM ----------------------------------------------------- */
+
+.bus-selection{
+  padding: 5%;
+  width: 100%;
+  position: relative;
+}
+.bus-selection .btn-blue{
+  width: 10%;
+}
+
+/* ------------------------------------------------- !BUS FORM ---------------------------------------------------- */
