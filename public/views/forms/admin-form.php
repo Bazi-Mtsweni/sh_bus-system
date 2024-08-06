@@ -46,7 +46,7 @@ require(BASE_DIR .'/config.php');
                 </div>
                 <p>Forgot Your Password? <a href="#">Reset Password</a></p>
                 <!-- <div class="input">
-                    <input type="hidden" aria-hidden="true" name="admin-id" id="admin-id" placeholder="Admin ID" value="ICT3715" onkeyup="validateAdminID(this, 'admin-id-error');" required>
+                    <input type="text" name="admin-id" id="admin-id" placeholder="Admin ID" onkeyup="validateAdminID(this, 'admin-id-error');" required>
                     <span class="error" id="admin-id-error"></span>
                 </div> -->
                 <input type="hidden" aria-hidden="true" name="admin-id" id="admin-id" value="ICT3715" required>

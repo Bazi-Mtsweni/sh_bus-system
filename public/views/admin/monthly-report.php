@@ -3,7 +3,7 @@
 define('BASE_DIR', realpath(dirname(__FILE__) . '/../..'));
 
 require(BASE_DIR . '/config.php');
-require(ROOT_PATH . '/backend/controllers/weekly-report.php');
+require(ROOT_PATH . '/backend/controllers/monthly-report.php');
 
 if (!isset($_SESSION["admin_id"])) {
     header("Location: http://localhost/sh-bus-system/public");
@@ -21,7 +21,7 @@ $date = date('j F Y');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Weekly Reports - SHSS Admin</title>
+    <title>Monthly Reports - SHSS Admin</title>
 
     <link rel="stylesheet" href="<?php echo BASE_URL . '/css/admin-styles.css' ?>">
     <link rel="stylesheet" href="<?php echo BASE_URL . '/css/admin-reports.css' ?>">
@@ -34,25 +34,25 @@ $date = date('j F Y');
     include(BASE_DIR . "/includes/admin-header.php");
     include(BASE_DIR . "/includes/alerts.php");
     ?>
-    <h2 class="intro">Weekly MIS Report - <?php echo "From ". $days[0] ; ?></h2>
+    <h2 class="intro">Monthly MIS Report - <?php echo "For The Month Of " . date('F');?></h2>
     <section class="dash-nav">
         <?php include(BASE_DIR . "/includes/admin-nav.php"); ?>
         <div class="dashboard">
             <div class="actions">
-                <button class="weekly" onclick="printReport();"><a href="#daily-report"></a>Generate Weekly Report</button>
+                <button class="monthly" onclick="printReport();"><a href="#daily-report"></a>Generate Monthly Report</button>
             </div>
-            <div id="weekly-charts" class="charts">
-                <canvas class="chart" id="weeklyReportChart"></canvas>
+            <div id="monthly-charts" class="charts">
+                <canvas class="chart" id="monthlyReportChart"></canvas>
             </div>
-            <div id="weekly-charts" class="charts">
+            <div id="monthly-charts" class="charts">
                 <canvas class="chart pie" id="approvedStudentsPieChart"></canvas>
                 <canvas class="chart" id="busUsageChart"></canvas>
             </div>
         </div>
     </section>
 
-    <section class="report-table" id="weekly-report">
-        <h2>Weekly Report - <?php echo "From ". $days[0] . " to " . $days[6]; ?></h2>
+    <section class="report-table" id="monthly-report">
+        <h2>Monthly Report - <?php echo "For ". date('F Y'); ?></h2>
         <div class="waiting">
             <h3>Students Waiting</h3>
             <div class="search">
@@ -139,14 +139,15 @@ $date = date('j F Y');
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="<?php echo BASE_URL . "/js/admin.js"; ?>"></script>
     <script>
-        const ctx = document.getElementById('weeklyReportChart').getContext('2d');
+        const ctx = document.getElementById('monthlyReportChart').getContext('2d');
         const pieCtx = document.getElementById('approvedStudentsPieChart').getContext('2d');
         const busUsageCtx = document.getElementById('busUsageChart').getContext('2d');
+
 
         const weeklyReportChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: <?php echo json_encode($days); ?>,
+                labels: <?php echo json_encode($months); ?>,
                 datasets: [{
                         label: 'Approved Students',
                         data: <?php echo json_encode($approvedStudents); ?>,
@@ -166,7 +167,7 @@ $date = date('j F Y');
             options: {
                 plugins: {
                     title: {
-                        text: "Weekly Charts Of Registered Students",
+                        text: "Monthly Chart Of Registered Students",
                         display: true
                     }
                 },
@@ -175,7 +176,7 @@ $date = date('j F Y');
                     x: {
                         beginAtZero: true,
                         title: {
-                            text: "Dates For The Past 7 Days",
+                            text: "Months",
                             display: true
                         }
                     },
@@ -217,7 +218,7 @@ $date = date('j F Y');
                 responsive: true,
                 plugins: {
                     title: {
-                        text: "Approved Students Per Grade - Last 7 Days",
+                        text: "Approved Students Per Grade - For " + <?php echo json_encode(date('F Y')); ?>,
                         display: true 
                     }  
                 }
@@ -232,15 +233,15 @@ $date = date('j F Y');
                     {
                         label: 'Morning Use',
                         data: <?php echo json_encode($morningUse); ?>,
-                        backgroundColor: 'rgba(75, 192, 192, 1)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 1)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Afternoon Use',
                         data: <?php echo json_encode($afternoonUse); ?>,
-                        backgroundColor: 'rgba(255, 159, 64, 1)',
-                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 206, 86, 1)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
                         borderWidth: 1
                     }
                 ]
@@ -257,7 +258,7 @@ $date = date('j F Y');
                 },
                 plugins: {
                     title: {
-                        text: "Bus Usage By Students - Last 7 Days",
+                        text: "Bus Usage By Students - For " + <?php echo json_encode(date('F Y')); ?>,
                         display: true 
                     }  
                 }

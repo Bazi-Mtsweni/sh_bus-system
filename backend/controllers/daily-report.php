@@ -35,10 +35,7 @@ function fetch_list($conn, $specific_date, $type, $search)
         s.studentId, 
         s.grade, 
         s.tel AS studentTel, 
-        p.parentName, 
-        p.email AS parentEmail, 
         b.bus_name, 
-        b.capacity, 
         CASE 
             WHEN r.morning_pickup_number IS NOT NULL THEN 'Yes' 
             ELSE 'No' 
@@ -52,8 +49,6 @@ function fetch_list($conn, $specific_date, $type, $search)
         registrations reg
     JOIN 
         students s ON reg.studentId = s.studentId
-    JOIN 
-        parents p ON s.parentId = p.parentID
     JOIN 
         buses b ON reg.busId = b.busId
     JOIN 

@@ -100,6 +100,7 @@ darkModeToggle.addEventListener("click", function () {
 
 const dailyReportController = "http://localhost/sh-bus-system/backend/controllers/daily-report.php";
 const weeklyReportController = "http://localhost/sh-bus-system/backend/controllers/weekly-report.php";
+const monthlyReportController = "http://localhost/sh-bus-system/backend/controllers/monthly-report.php";
 
 function getReportController() {
   //Get the window URL, split it into an array by "/" and take out the last array item which is the file name (file.php)
@@ -110,6 +111,8 @@ function getReportController() {
       return dailyReportController;
     case "weekly-report.php":
       return weeklyReportController;
+    case "monthly-report.php":
+      return monthlyReportController;
     default: showAlert("error", "Couldn't fetch data, please try again");
       break;
   }

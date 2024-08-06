@@ -35,10 +35,7 @@ function fetch_list($conn, $specific_date, $type, $search)
         s.studentId, 
         s.grade, 
         s.tel AS studentTel, 
-        p.parentName, 
-        p.email AS parentEmail, 
         b.bus_name, 
-        b.capacity, 
         CASE 
             WHEN r.morning_pickup_number IS NOT NULL THEN 'Yes' 
             ELSE 'No' 
@@ -53,13 +50,11 @@ function fetch_list($conn, $specific_date, $type, $search)
     JOIN 
         students s ON reg.studentId = s.studentId
     JOIN 
-        parents p ON s.parentId = p.parentID
-    JOIN 
         buses b ON reg.busId = b.busId
     JOIN 
         routes r ON b.route_id = r.route_id
     WHERE 
-        reg.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND $condition $search_condition
+        reg.date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND $condition $search_condition
     ORDER BY 
         s.studentName
     ";
@@ -111,36 +106,36 @@ function addActions($type, $studentId) {
 }
 
 
-function getWeeklyData($status)
+function getMonthlyData($status)
 {
     global $conn;
 
     $sql = "
     SELECT
-        DATE(r.date) AS day,
+        DATE_FORMAT(r.date, '%Y-%m') AS month,
         COUNT(r.registrationId) AS total_students
     FROM
         registrations r
     WHERE
         r.$status = TRUE AND
-        r.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+        r.date >= DATE_FORMAT(CURDATE() - INTERVAL 1 YEAR + INTERVAL 1 MONTH, '%Y-01-01')
     GROUP BY
-        DATE(r.date)
+        DATE_FORMAT(r.date, '%Y-%m')
     ORDER BY
-        DATE(r.date);
+        DATE_FORMAT(r.date, '%Y-%m');
     ";
 
     $result = $conn->query($sql);
     $data = array();
 
     while ($row = $result->fetch_assoc()) {
-        $data[$row['day']] = $row['total_students'];
+        $data[date('F Y', strtotime($row['month'] . '-01'))] = $row['total_students'];
     }
 
     return $data;
 }
 
-function WeeklyApprovedDataPerGrade()
+function MonthlyApprovedDataPerGrade()
 {
     global $conn;
 
@@ -154,7 +149,7 @@ function WeeklyApprovedDataPerGrade()
         registrations r ON s.studentId = r.studentId
     WHERE
         r.approved = TRUE AND
-        r.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+        r.date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
     GROUP BY
         s.grade
     ORDER BY
@@ -185,7 +180,7 @@ function fetch_bus_usage($conn)
     JOIN 
         routes r ON b.route_id = r.route_id
     WHERE 
-        reg.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND reg.approved = TRUE 
+        reg.date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND reg.approved = TRUE 
     GROUP BY 
         b.bus_name
     ORDER BY 
@@ -205,9 +200,9 @@ function fetch_bus_usage($conn)
 
 
 //Call functions to return data
-$approvedDataPerGrade = WeeklyApprovedDataPerGrade();
-$approvedData = getWeeklyData('approved');
-$waitingData = getWeeklyData('waiting');
+$approvedDataPerGrade = MonthlyApprovedDataPerGrade();
+$approvedData = getMonthlyData('approved');
+$waitingData = getMonthlyData('waiting');
 $busUsageData = fetch_bus_usage($conn);
 
 $busNames = [];
@@ -220,23 +215,23 @@ foreach ($busUsageData as $data) {
     $afternoonUse[] = $data['afternoon_use'];
 }
 
-// Create an array of the past 7 days
-$days = array();
-for ($i = 0; $i < 7; $i++) {
-    $days[] = date('Y-m-d', strtotime("-$i days"));
+// Create an array of the months of the year
+$months = array();
+$currentYear = date('Y');
+for ($i = 1; $i <= 12; $i++) {
+    $months[] = date('F Y', mktime(0, 0, 0, $i, 1, $currentYear));
 }
-$days = array_reverse($days);
 
 // Initialize data arrays for approved and waiting students
-$approvedStudents = array_fill(0, 7, 0);
-$waitingStudents = array_fill(0, 7, 0);
+$approvedStudents = array_fill(0, 12, 0);
+$waitingStudents = array_fill(0, 12, 0);
 
-foreach ($days as $index => $day) {
-    if (isset($approvedData[$day])) {
-        $approvedStudents[$index] = $approvedData[$day];
+foreach ($months as $index => $month) {
+    if (isset($approvedData[$month])) {
+        $approvedStudents[$index] = $approvedData[$month];
     }
-    if (isset($waitingData[$day])) {
-        $waitingStudents[$index] = $waitingData[$day];
+    if (isset($waitingData[$month])) {
+        $waitingStudents[$index] = $waitingData[$month];
     }
 }
 
