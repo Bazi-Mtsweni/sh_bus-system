@@ -59,7 +59,7 @@ function fetch_list($conn, $specific_date, $type, $search)
     JOIN 
         routes r ON b.route_id = r.route_id
     WHERE 
-        reg.date = CURDATE() AND $condition $search_condition
+        reg.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND $condition $search_condition
     ORDER BY 
         s.studentName
     ";
@@ -77,6 +77,7 @@ if ($result->num_rows > 0) {
                 <td>{$row['bus_name']}</td>
                 <td>{$row['morning_use']}</td>
                 <td>{$row['afternoon_use']}</td>
+                <td>{$row['reg_date']}</td>
                 <td class='actions-cell'>"
                     . addActions($type, $row['studentId']) .
                 "</td>
@@ -110,7 +111,7 @@ function addActions($type, $studentId) {
 }
 
 
-function getDailyData($status)
+function getWeeklyData($status)
 {
     global $conn;
 
@@ -122,7 +123,7 @@ function getDailyData($status)
         registrations r
     WHERE
         r.$status = TRUE AND
-        r.date = CURDATE()
+        r.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
     GROUP BY
         DATE(r.date)
     ORDER BY
@@ -139,7 +140,7 @@ function getDailyData($status)
     return $data;
 }
 
-function DailyApprovedDataPerGrade()
+function WeeklyApprovedDataPerGrade()
 {
     global $conn;
 
@@ -153,7 +154,7 @@ function DailyApprovedDataPerGrade()
         registrations r ON s.studentId = r.studentId
     WHERE
         r.approved = TRUE AND
-        r.date = CURDATE()
+        r.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
     GROUP BY
         s.grade
     ORDER BY
@@ -184,7 +185,7 @@ function fetch_bus_usage($conn)
     JOIN 
         routes r ON b.route_id = r.route_id
     WHERE 
-        reg.date = CURDATE() AND reg.approved = TRUE 
+        reg.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND reg.approved = TRUE 
     GROUP BY 
         b.bus_name
     ORDER BY 
@@ -204,9 +205,9 @@ function fetch_bus_usage($conn)
 
 
 //Call functions to return data
-$approvedDataPerGrade = DailyApprovedDataPerGrade();
-$approvedData = getDailyData('approved');
-$waitingData = getDailyData('waiting');
+$approvedDataPerGrade = WeeklyApprovedDataPerGrade();
+$approvedData = getWeeklyData('approved');
+$waitingData = getWeeklyData('waiting');
 $busUsageData = fetch_bus_usage($conn);
 
 $busNames = [];
@@ -220,17 +221,23 @@ foreach ($busUsageData as $data) {
 }
 
 // Create an array of the past 7 days
-$today = date('j F Y');
+$days = array();
+for ($i = 0; $i < 7; $i++) {
+    $days[] = date('Y-m-d', strtotime("-$i days"));
+}
+$days = array_reverse($days);
 
 // Initialize data arrays for approved and waiting students
-$approvedStudents = array_fill(0, 1, 0);
-$waitingStudents = array_fill(0, 1, 0);
+$approvedStudents = array_fill(0, 7, 0);
+$waitingStudents = array_fill(0, 7, 0);
 
-if (isset($approvedData)) {
-    $approvedStudents = $approvedData;
-}
-if (isset($waitingData)) {
-    $waitingStudents = $waitingData;
+foreach ($days as $index => $day) {
+    if (isset($approvedData[$day])) {
+        $approvedStudents[$index] = $approvedData[$day];
+    }
+    if (isset($waitingData[$day])) {
+        $waitingStudents[$index] = $waitingData[$day];
+    }
 }
 
 // Initialize data arrays for grades and counts

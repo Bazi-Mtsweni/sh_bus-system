@@ -3,7 +3,7 @@
 define('BASE_DIR', realpath(dirname(__FILE__) . '/../..'));
 
 require(BASE_DIR . '/config.php');
-require(ROOT_PATH . '/backend/db/conn.php');
+require(ROOT_PATH . '/backend/controllers/daily-report.php');
 
 if (!isset($_SESSION["admin_id"])) {
     header("Location: http://localhost/sh-bus-system/public");
@@ -20,6 +20,8 @@ $date = date('j F Y');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Daily Reports - SHSS Admin</title>
 
     <link rel="stylesheet" href="<?php echo BASE_URL . '/css/admin-styles.css' ?>">
     <link rel="stylesheet" href="<?php echo BASE_URL . '/css/admin-reports.css' ?>">
@@ -40,9 +42,11 @@ $date = date('j F Y');
                 <button class="daily" onclick="printReport();"><a href="#daily-report"></a>Generate Daily Report</button>
             </div>
             <div id="daily-charts" class="charts">
-                <canvas class="chart" id="buses-chart" width="100px" height="100px"></canvas>
-                <canvas class="chart" id="students-chart" width="100px" height="100px"></canvas>
-                <canvas class="chart" id="statuses-chart" width="100px" height="100px"></canvas>
+                <canvas class="chart" id="dailyReportChart"></canvas>
+            </div>
+            <div id="daily-charts" class="charts">
+                <canvas class="chart pie" id="approvedStudentsPieChart"></canvas>
+                <canvas class="chart" id="busUsageChart"></canvas>
             </div>
         </div>
     </section>
@@ -132,122 +136,129 @@ $date = date('j F Y');
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="<?php echo BASE_URL . "/js/admin.js"; ?>"></script>
     <script>
-        // Graphs
+        const ctx = document.getElementById('dailyReportChart').getContext('2d');
+        const pieCtx = document.getElementById('approvedStudentsPieChart').getContext('2d');
+        const busUsageCtx = document.getElementById('busUsageChart').getContext('2d');
 
-        const buses = document.getElementById("buses-chart");
-        const students = document.getElementById("students-chart");
-        const statuses = document.getElementById("statuses-chart");
-
-        const busCapacity = [];
-        const busStudents = [];
-        const approvedStudentsPerGrade = [];
-        const waitingStudentsPerGrade = [];
-        const canceledStudentsPerGrade = [];
-
-        <?php foreach ($bus_capacities as $key => $capacity){ ?>
-            busCapacity.push('<?php echo $capacity; ?>');
-        <?php }; ?>
-        <?php foreach ($total_approved_students as $bus_data){ ?>
-            busStudents.push('<?php echo $bus_data["total_approved_students"]; ?>');
-        <?php }; ?>
-        <?php foreach (dataPerGrade($approved_students) as $total_students){ ?>
-            approvedStudentsPerGrade.push('<?php echo $total_students; ?>');
-        <?php }; ?>
-        <?php foreach (dataPerGrade($waiting_students) as $total_students){ ?>
-            waitingStudentsPerGrade.push('<?php echo $total_students; ?>');
-        <?php }; ?>
-        <?php foreach (dataPerGrade($canceled_students) as $total_students){ ?>
-            canceledStudentsPerGrade.push('<?php echo $total_students; ?>');
-        <?php }; ?>
-
-        new Chart(buses, {
-            type: "bar",
+        const dailyReportChart = new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: ["Bus 1", "Bus 2", "Bus 3"],
+                labels: [],
                 datasets: [{
-                        label: "Bus Capacity",
-                        data: busCapacity,
-                        borderWidth: 1,
+                        label: 'Approved Students',
+                        data: <?php echo json_encode($approvedStudents); ?>,
+                        backgroundColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
                     },
                     {
-                        label: "Number of Students",
-                        data: busStudents,
-                        borderWidth: 1,
+                        label: 'Waiting Students',
+                        data: <?php echo json_encode($waitingStudents); ?>,
+                        backgroundColor: 'rgba(255, 159, 64, 1)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        text: "Daily Chart Of Registered Students",
+                        display: true
+                    }
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            text: "Today's Date",
+                            display: true
+                        }
                     },
-                ],
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            text: "Number Of Registrations",
+                            display: true
+                        }
+                    }
+                }
+            }
+        });
+
+        const approvedStudentsPieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+                datasets: [{
+                    data: <?php echo json_encode($approvedStudentsPerGrade); ?>,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        text: "Approved Students Per Grade - " + <?php echo json_encode($today); ?>,
+                        display: true 
+                    }  
+                }
+            }
+        });
+
+        const busUsageChart = new Chart(busUsageCtx, {
+            type: 'bar',
+            data: {
+                labels: <?php echo json_encode($busNames); ?>,
+                datasets: [
+                    {
+                        label: 'Morning Use',
+                        data: <?php echo json_encode($morningUse); ?>,
+                        backgroundColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Afternoon Use',
+                        data: <?php echo json_encode($afternoonUse); ?>,
+                        backgroundColor: 'rgba(255, 159, 64, 1)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 scales: {
+                    x: {
+                        beginAtZero: true
+                    },
                     y: {
-                        beginAtZero: true,
-                    },
+                        beginAtZero: true
+                    }
                 },
                 plugins: {
                     title: {
-                        display: true,
-                        text: "Total Number Of Students Per Bus",
-                    },
-                },
-            },
-        });
-
-        new Chart(students, {
-            type: "pie",
-            data: {
-                labels: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
-                datasets: [{
-                    label: "Students Using The Bus",
-                    data: approvedStudentsPerGrade,
-                    borderWidth: 1,
-                }, ],
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Approved Students per Grade",
-                    },
-                },
-            },
-        });
-
-        new Chart(statuses, {
-            type: "line",
-            data: {
-                labels: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
-                datasets: [{
-                        label: "Approved Students",
-                        data: approvedStudentsPerGrade,
-                        borderWidth: 1,
-                    },
-                    {
-                        label: "Waiting Students",
-                        data: waitingStudentsPerGrade,
-                        borderWidth: 1,
-                    },
-                    {
-                        label: "Canceled Students",
-                        data: canceledStudentsPerGrade,
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Student Statuses Per Grade",
-                    },
-                },
-            },
+                        text: "Bus Usage By Students - " + <?php echo json_encode($today); ?>,
+                        display: true 
+                    }  
+                }
+            }
         });
     </script>
 </body>
