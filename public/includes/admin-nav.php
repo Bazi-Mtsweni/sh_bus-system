@@ -22,7 +22,7 @@
         </li>
         <li>
             <i class="fa-solid fa-chart-simple"></i>
-            <a href="#">Monthly Report</a>
+            <a href="<?php echo BASE_URL . '/views/admin/monthly-report.php'; ?>">Monthly Report</a>
         </li>
         <li>
             <i class="fa-solid fa-user-group"></i>

@@ -12,6 +12,7 @@ import * as validators from "./form-validation.js";
 
 window.validateName = validators.validateName;
 window.validateUsername = validators.validateUsername;
+window.validateInitials = validators.validateInitials;
 window.validateRSAID = validators.validateRSAID;
 window.validateEmail = validators.validateEmail;
 window.validateTel = validators.validateTel;
@@ -163,6 +164,10 @@ function login(e) {
     document.getElementById("password"),
     "password-error"
   );
+  let initials = validators.validateInitials(
+    document.getElementById("initials"),
+    "initials-error"
+  );
 
   let botCheck = validators.validateBotCheck();
   let form = document.getElementsByTagName("form")[0];
@@ -170,15 +175,13 @@ function login(e) {
 
   switch (formID) {
     case "admin-form":
-      let adminID = validators.validateAdminID(
-        document.getElementById("admin-id"),
-        "admin-id-error"
-      );
+      let adminID = document.getElementById("admin-id");
 
-      if (email && password && adminID && botCheck) {
+      if (initials && email && password && adminID && botCheck) {
         // Call the function with form data
         sendAjaxRequest(
           SERVER + "scripts/login.php",
+          { name: "initials", value: initials },
           { name: "email", value: email },
           { name: "password", value: password },
           { name: "admin_id", value: adminID }

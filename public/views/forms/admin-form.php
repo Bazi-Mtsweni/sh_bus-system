@@ -32,6 +32,10 @@ require(BASE_DIR .'/config.php');
                 </div>
                 <h2>Admin Portal Log In.</h2>
                 <div class="input">
+                    <input type="text" name="initials" id="initials" placeholder="Admin Initials" onkeyup="validateInitials(this, 'initials-error');" required >
+                    <span class="error" id="initials-error"></span>
+                </div>
+                <div class="input">
                     <input type="email" name="email" id="email" placeholder="Email Address" onkeyup="validateEmail(this, 'email-error');" required >
                     <span class="error" id="email-error"></span>
                 </div>
@@ -41,10 +45,11 @@ require(BASE_DIR .'/config.php');
                     <i class="fa-solid fa-eye" id="eyeIcon" title="Show Password"></i>
                 </div>
                 <p>Forgot Your Password? <a href="#">Reset Password</a></p>
-                <div class="input">
-                    <input type="text" name="admin-id" id="admin-id" placeholder="Admin ID" onkeyup="validateAdminID(this, 'admin-id-error');" required>
+                <!-- <div class="input">
+                    <input type="hidden" aria-hidden="true" name="admin-id" id="admin-id" placeholder="Admin ID" value="ICT3715" onkeyup="validateAdminID(this, 'admin-id-error');" required>
                     <span class="error" id="admin-id-error"></span>
-                </div>
+                </div> -->
+                <input type="hidden" aria-hidden="true" name="admin-id" id="admin-id" value="ICT3715" required>
                 <input type="hidden" name="bot-check" id="bot-check" aria-hidden="true">
                 <div class="submit">
                     <button type="submit" id="admin-submit" class="btn-blue">

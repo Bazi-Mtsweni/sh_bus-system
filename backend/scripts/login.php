@@ -16,6 +16,7 @@ function redirect($bool, $path)
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    $initials = isset($_POST["initials"]) ? trim($_POST["initials"]) : "";
     $email = isset($_POST["email"]) ? trim($_POST["email"]) : "";
     $password = isset($_POST["password"]) ? trim($_POST["password"]) : "";
     $admin_id = isset($_POST["admin_id"]) ? trim($_POST["admin_id"]) : "";
@@ -26,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $_POST["email"];
         $password = $_POST["password"];
         $admin_id = $_POST["admin-id"];
+        $initials = $_POST["initials"];
     }
 
     $admin_query = "SELECT * FROM admin WHERE email = ?";
@@ -39,27 +41,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $admin_result = $stmt->get_result();
         if ($admin_result->num_rows > 0) {
             $admin = $admin_result->fetch_assoc();
-            if ($password === $admin['password']) { //Use password_verify() for hashed password
-                // Admin authenticated
-                session_regenerate_id(true);
-                setcookie(session_name(), session_id(), [
-                    'expires' => time() + 86400, // Cookie expires in 1 day
-                    'path' => '/',
-                    'domain' => '', 
-                    'secure' => false, 
-                    'httponly' => true, 
-                    'samesite' => 'Lax' 
-                ]);
-                $_SESSION["admin_id"] = $admin['adminId'];
-                $_SESSION["initials"] = $admin['initials'];
-                redirect(true, '../admin/admin-dashboard.php');
-                exit;
+            if ($initials === $admin['initials']) { 
+                if ($password === $admin['password']) { //Use password_verify() for hashed password
+                    // Admin authenticated
+                    session_regenerate_id(true);
+                    setcookie(session_name(), session_id(), [
+                        'expires' => time() + 86400, // Cookie expires in 1 day
+                        'path' => '/',
+                        'domain' => '', 
+                        'secure' => false, 
+                        'httponly' => true, 
+                        'samesite' => 'Lax' 
+                    ]);
+                    $_SESSION["admin_id"] = $admin['adminId'];
+                    $_SESSION["initials"] = $admin['initials'];
+                    redirect(true, '../admin/admin-dashboard.php');
+                    exit;
+                } else {
+                    response(false, "Please insert a valid password or reset it");
+                    exit;
+                }
+                
             } else {
-                response(false, "Please insert a valid password or reset it");
+                response(false, "Your initials don't match with your account email");
                 exit;
             }
         } else {
             response(false, "Incorrect email or it does not exist");
+            exit;
         }
     }
 
@@ -70,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $parent_result = $stmt->get_result();
         if ($parent_result->num_rows > 0) {
             $parent = $parent_result->fetch_assoc();
-            if (password_verify($password, $parent['password'])) { //Use password_verify() for hashed password
+            if (password_verify($password, $parent['password'])) { 
                 // Parent authenticated
                 session_regenerate_id(true);
                 setcookie(session_name(), session_id(), [

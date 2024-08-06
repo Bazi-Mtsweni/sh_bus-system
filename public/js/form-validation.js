@@ -14,6 +14,22 @@ export function validateName(input, error) {
   return name;
 }
 
+export function validateInitials(input, error) {
+  const initials = input.value;
+  const initialsError = document.getElementById(error);
+
+  if (initials.length == 0) {
+    initialsError.innerHTML = "Initials are required";
+    return false;
+  }
+  if (!initials.match(/^[A-Za-z]*\s{1}[A-Za-z]{1,}$/)) {
+    initialsError.innerHTML = "Please write Initials and Surname";
+    return false;
+  }
+  initialsError.innerHTML = " ";
+  return initials;
+}
+
 export function validateUsername(input, error) {
   const username = input.value;
   const usernameError = document.getElementById(error);
