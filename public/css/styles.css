@@ -112,7 +112,6 @@ li,
 a {
   font-size: var(--p);
 }
-
 .image-container {
   position: relative;
   overflow: hidden;
@@ -141,6 +140,11 @@ a {
   padding: 0.5rem 1rem;
   border-radius: 7px;
   transition: background-color 300ms ease, border 300ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 50%;
+  cursor: pointer;
 }
 .btn-blue:hover {
   background-color: var(--hover-blue);

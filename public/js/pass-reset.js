@@ -1,6 +1,5 @@
 const passwordInput = document.getElementById("password");
 const pwdIcon = document.getElementById("eyeIcon");
-const pwdConditions = document.querySelector(".conditions");
 const darkModeToggle = document.getElementById("dark-mode-toggle");
 const body = document.body;
 const BASE_URL = "http://localhost/sh-bus-system/public";
@@ -8,21 +7,11 @@ const BASE_URL = "http://localhost/sh-bus-system/public";
 import { showAlert, showAlertBox, hideAlertBox } from "./alerts.js";
 import * as validators from "./form-validation.js";
 
-// ----------------------------------------------- FORM VALIDTAION ----------------------------
-
-window.validateName = validators.validateName;
-window.validateUsername = validators.validateUsername;
-window.validateInitials = validators.validateInitials;
-window.validateRSAID = validators.validateRSAID;
 window.validateEmail = validators.validateEmail;
-window.validateTel = validators.validateTel;
-window.validatePassword = validators.validatePassword;
 window.validateLoginPassword = validators.validateLoginPassword;
-window.matchPasswords = validators.matchPasswords;
-window.validateAdminID = validators.validateAdminID;
 
 // Password visibility eye icon toggler
-pwdIcon.addEventListener("click", function () {
+function showPassword() {
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
     pwdIcon.classList.remove("fa-eye");
@@ -32,16 +21,9 @@ pwdIcon.addEventListener("click", function () {
     pwdIcon.classList.remove("fa-eye-slash");
     pwdIcon.classList.add("fa-eye");
   }
-});
-
-if (passwordInput && pwdConditions) {
-  passwordInput.addEventListener("focus", function () {
-    pwdConditions.classList.toggle("focused");
-  });
-
-  passwordInput.addEventListener("blur", function () {
-    pwdConditions.classList.remove("focused");
-  });
+}
+if(pwdIcon) {
+    pwdIcon.addEventListener("click", showPassword);
 }
 
 // --------------------------------------- NAV SUB MENU TOGGLE ------------------------------------
@@ -133,148 +115,67 @@ darkModeToggle.addEventListener("click", function () {
   }
 });
 
-// --------------------------------------- FORM SUBMISSION -------------------------------------------------
-
 // Form buttons
-const adminSubmitBtn = document.getElementById("admin-submit");
-const loginSubmitBtn = document.getElementById("login-submit");
-const userRegisterBtn = document.getElementById("user-registration");
+const resetSubmitBtn = document.getElementById("p-reset-submit");
+const requestSubmitBtn = document.getElementById("p-request-submit");
 
-if (adminSubmitBtn) {
-  adminSubmitBtn.addEventListener("click", login);
-} else if(loginSubmitBtn) {
-  loginSubmitBtn.addEventListener("click", login);
-} else if(userRegisterBtn) {
-  userRegisterBtn.addEventListener("click", registerUser);
+if (resetSubmitBtn) {
+  resetSubmitBtn.addEventListener("click", processForms);
+} else if (requestSubmitBtn) {
+  requestSubmitBtn.addEventListener("click", processForms);
 }
 
+// Process Form and Send Link
 
-
-function login(e) {
+function processForms(e) {
   e.preventDefault();
+
   const SERVER = "http://localhost/sh-bus-system/backend/";
-  localStorage.setItem("buttonId", "admin-loader");
 
   // Validate fields again for submission
-  let email = validators.validateEmail(
-    document.getElementById("email"),
-    "email-error"
-  );
-  let password = validators.validateLoginPassword(
-    document.getElementById("password"),
-    "password-error"
-  );
-  
-
   let botCheck = validators.validateBotCheck();
+
   let form = document.getElementsByTagName("form")[0];
   let formID = form.getAttribute("id");
 
   switch (formID) {
-    case "admin-form":
-      let adminID = document.getElementById("admin-id");
-      // Initials only apply to admin
-      let initials = validators.validateInitials(
-          document.getElementById("initials"),
-          "initials-error"
-        );
-
-      if (initials && email && password && adminID && botCheck) {
+    case "p-request":
+      localStorage.setItem("buttonId", "p-request-loader");
+      let email = validators.validateEmail(
+        document.getElementById("email"),
+        "email-error"
+      );
+      if (email && botCheck) {
         // Call the function with form data
-        sendAjaxRequest(
-          SERVER + "scripts/login.php",
-          { name: "initials", value: initials },
-          { name: "email", value: email },
-          { name: "password", value: password },
-          { name: "admin_id", value: adminID }
-        );
+        sendAjaxRequest(SERVER + "scripts/send-reset-link.php", {
+          name: "email",
+          value: email,
+        });
       } else {
         showAlert("error", "Please fix all errors and try again");
       }
       break;
 
-    case "user-login":
-      if (email && password && botCheck) {
+    case "p-reset":
+      localStorage.setItem("buttonId", "p-reset-loader");
+      let pwd = validators.validateLoginPassword(
+        document.getElementById("password"),
+        "password-error"
+      );
+      if (pwd && botCheck) {
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+        
         // Call the function with form data
-        sendAjaxRequest(
-          SERVER + "scripts/login.php",
-          { name: "email", value: email },
-          { name: "password", value: password }
+        sendAjaxRequest(SERVER + "scripts/update-password.php", 
+          {name: "password", value: pwd},
+          {name: "email", value: getQueryParam('email')} //Get email from the reset link in the URL
         );
       } else {
         showAlert("error", "Please fix all errors and try again");
       }
-      break;
-
-    default:
-      showAlert("error", "Error processing correct form data. Contact support");
-      break;
-  }
-}
-
-function registerUser(e) {
-  e.preventDefault();
-  const SERVER = "http://localhost/sh-bus-system/backend/";
-  localStorage.setItem("buttonId", "register-loader");
-
-  // Validate fields again for submission
-  let name = validators.validateName(
-    document.getElementById("name"),
-    "name-error"
-  );
-  let email = validators.validateEmail(
-    document.getElementById("email"),
-    "email-error"
-  );
-  let tel = validators.validateTel(
-    document.getElementById("tel"),
-    "tel-error"
-  );
-  let password = validators.validateLoginPassword(
-    document.getElementById("password"),
-    "password-error"
-  );
-  let password2 = validators.matchPasswords(
-    document.getElementById("password-2"),
-    "password-2-error"
-  );
-
-  let botCheck = validators.validateBotCheck();
-  let form = document.getElementsByTagName("form")[0];
-  let formID = form.getAttribute("id");
-
-  switch (formID) {
-    case "parent-form":
-    
-      if (name && email && tel && password && password2 && botCheck) {
-        // Call the function with form data
-        sendAjaxRequest(
-          SERVER + "scripts/register.php",
-          { name: "name", value: name },
-          { name: "email", value: email },
-          { name: "tel", value: tel },
-          { name: "password", value: password }
-        );
-      } else {
-        showAlert("error", "Please fix all errors and try again");
-      }
-      break;
-
-    case "student-form":
-      if (email && password && botCheck) {
-        // Call the function with form data
-        sendAjaxRequest(
-          SERVER + "scripts/login.php",
-          { name: "email", value: email },
-          { name: "password", value: password }
-        );
-      } else {
-        showAlert("error", "Please fix all errors and try again");
-      }
-      break;
-
-    default:
-      showAlert("error", "Error processing correct form data. Contact support");
       break;
   }
 }
@@ -283,10 +184,11 @@ function sendAjaxRequest(url, ...fields) {
   let params = new URLSearchParams();
   var buttonId = localStorage.getItem("buttonId");
   showLoader(buttonId);
-  fields.forEach((field) => {
+  fields.forEach(field => {
     if (field.name && field.value) {
       params.append(field.name, field.value);
     }
+    
   });
 
   // Initialize the XMLHttpRequest
@@ -300,7 +202,7 @@ function sendAjaxRequest(url, ...fields) {
         var response = JSON.parse(xhr.responseText);
         console.log(response);
         if (response.success) {
-          window.location.href = response.redirect;
+          showAlert("success", response.error);
         } else {
           showAlert("error", response.error);
         }

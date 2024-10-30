@@ -42,7 +42,7 @@ require(BASE_DIR . '/config.php');
                     <span class="error" id="password-error"></span>
                     <i class="fa-solid fa-eye" id="eyeIcon" title="Show Password"></i>
                 </div>
-                <p>Forgot Your Password? <a href="#">Reset Password</a></p>
+                <p>Forgot Your Password? <a href="./reset-password.php">Reset Password</a></p>
                 <input type="hidden" name="bot-check" id="bot-check" aria-hidden="true">
                 <div class="submit">
                     <p>Don&apos;t have an account? <a href="./signup-form.php">Register Account</a></p>
