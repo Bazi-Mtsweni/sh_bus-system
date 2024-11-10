@@ -1,0 +1,114 @@
+.btn-red {
+  border: 3px solid var(--red);
+  background-color: var(--red);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  transition: background-color 300ms ease, border 300ms ease;
+  cursor: pointer;
+}
+.btn-red:hover {
+  background-color: var(--hover-red);
+  border: 3px solid var(--hover-red);
+}
+.btn-black {
+  border: 3px solid var(--text);
+  background-color: var(--text);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  transition: background-color 300ms ease, border 300ms ease;
+  cursor: pointer;
+}
+.btn-black:hover {
+  background-color: var(--hover-text);
+  border: 3px solid var(--hover-text);
+}
+
+/* ----------------------------------------- DELETE CONFIRMATION MODAL ------------------------------------------*/
+
+.modal.opened {
+  display: block !important;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--bg);
+  color: var(--text);
+  border-radius: 25px;
+  box-shadow: var(--shadow);
+  padding: 5%;
+  text-align: center;
+  z-index: 500;
+}
+.modal h3{
+  color: var(--text);
+}
+.modal p {
+  margin: 2rem 0;
+  width: 100%;
+}
+.modal .modal-actions {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal .modal-actions button {
+  width: 45%;
+}
+.modal .modal-actions button .fa-solid {
+  margin-right: 1rem;
+  font-size: 1rem;
+}
+
+/* ---------------------------------------- DELETE CONFIRMATION MODAL ------------------------------------------ */
+
+/* ----------------------------------------------- STATUS TABLE ------------------------------------------------ */
+
+section {
+  width: 100%;
+  position: relative;
+  padding: 5%;
+}
+section .fa-solid {
+  font-size: calc(var(--p) + 0.2rem);
+  margin-right: 1rem;
+}
+section .instructions {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+section .instructions p {
+  font-weight: bold;
+}
+section .instructions .fa-solid {
+  font-size: calc(var(--p) + 0.5rem);
+  color: goldenrod;
+  margin-right: 1rem;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+table,
+th,
+td {
+  border: 2px solid var(--text);
+  padding: 1rem;
+  text-align: center;
+  color: var(--text);
+}
+.status-table {
+  margin: 3rem 0 0;
+}
+.status-table h2 {
+  font-family: "Roboto", sans-serif;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+
+/* ----------------------------------------------- STATUS TABLE ------------------------------------------------ */

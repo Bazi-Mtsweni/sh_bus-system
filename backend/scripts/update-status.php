@@ -1,5 +1,5 @@
 <?php
-include '../db/conn.php'; // This file should have the database connection code
+include '../db/conn.php'; 
 
 header('Content-Type: application/json');
 $response = array('success' => false, 'message' => '', 'newStatus' => '');

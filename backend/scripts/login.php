@@ -92,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ]);
                 $_SESSION["username"] = $parent['parentName'];
                 $_SESSION["parent_id"] = $parent['parentId'];
+                $_SESSION["parent_email"] = $parent['email'];
                 redirect(true, '../user/user-dashboard.php');
                 exit;
             } else {

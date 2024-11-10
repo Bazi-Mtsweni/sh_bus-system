@@ -41,9 +41,9 @@
         </div>
         <nav class="nav">
             <ul class="menu">
-                <li><a href="../forms/learner-form.php">Start New Application</a></li>
-                <li><a href="#">View Application Status</a></li>
-                <li><a href="#">Contact Support</a></li>
+                <li><a href="<?php echo BASE_URL . '/views/user/user-dashboard.php'; ?>">Dashboard</a></li>
+                <li><a href="<?php echo BASE_URL . '/views/forms/learner-form.php'; ?>">Start New Application</a></li>
+                <li><a href="<?php echo BASE_URL . '/views/user/application-status.php'; ?>">View Application Status</a></li>
             </ul>
             <div class="user-info">
                 <i class="fa-solid fa-circle-user"></i>

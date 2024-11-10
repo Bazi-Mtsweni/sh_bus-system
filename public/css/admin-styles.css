@@ -428,7 +428,7 @@ header .admin-info .fa-solid:nth-child(2) {
   cursor: pointer;
 }
 header .sub-menu{
-  width: 20%;
+  width: fit-content;
   position: absolute;
   top: 100%;
   opacity: 0;
@@ -446,7 +446,7 @@ header .sub-menu.admin {
   left: 67%;
 }
 header .sub-menu.notifications {
-  left: 45%;
+  left: 35%;
 }
 header .sub-menu li {
   padding: 1rem 0;

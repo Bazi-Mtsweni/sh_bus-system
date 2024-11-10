@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 'Off');
 
 require realpath(dirname(__DIR__)) . '/db/conn.php';
 
@@ -20,7 +22,7 @@ function fetch_list($conn, $specific_date, $type, $search)
             $condition = "reg.canceled = TRUE AND reg.approved = FALSE AND reg.waiting = FALSE";
             break;
         default:
-            return 'Couldn&apos;t GET table type';
+            return false;
     }
 
     $search_condition = '';
@@ -30,18 +32,18 @@ function fetch_list($conn, $specific_date, $type, $search)
     }
 
     $sql = "
-    SELECT 
+    SELECT DISTINCT
         s.studentName,
         s.studentId, 
         s.grade, 
         s.tel AS studentTel, 
         b.bus_name, 
         CASE 
-            WHEN r.morning_pickup_number IS NOT NULL THEN 'Yes' 
+            WHEN s.pickup_number IS NOT NULL THEN 'Yes' 
             ELSE 'No' 
         END AS morning_use, 
         CASE 
-            WHEN r.afternoon_dropoff_number IS NOT NULL THEN 'Yes' 
+            WHEN s.dropoff_number IS NOT NULL THEN 'Yes' 
             ELSE 'No' 
         END AS afternoon_use,
         DATE(reg.date) AS reg_date
@@ -52,7 +54,7 @@ function fetch_list($conn, $specific_date, $type, $search)
     JOIN 
         buses b ON reg.busId = b.busId
     JOIN 
-        routes r ON b.route_id = r.route_id
+        routes r ON b.bus_number = r.bus_number
     WHERE 
         reg.date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND $condition $search_condition
     ORDER BY 
@@ -79,7 +81,7 @@ if ($result->num_rows > 0) {
               </tr>";
     }
 } else {
-    echo "<tr><td colspan='9' style='text-align: center;'>No Records Found</td></tr>";
+    echo "<tr><td colspan='9' style='text-align: center;'></td></tr>";
 }
 
 function addActions($type, $studentId) {
@@ -171,14 +173,14 @@ function fetch_bus_usage($conn)
     $sql = "
     SELECT 
         b.bus_name,
-        SUM(CASE WHEN r.morning_pickup_number IS NOT NULL THEN 1 ELSE 0 END) AS morning_use,
-        SUM(CASE WHEN r.afternoon_dropoff_number IS NOT NULL THEN 1 ELSE 0 END) AS afternoon_use
+        s.pickup_number IS NOT NULL AS morning_use,
+        s.dropoff_number IS NOT NULL AS afternoon_use
     FROM 
-        registrations reg
+        students s
     JOIN 
-        buses b ON reg.busId = b.busId
+        buses b ON s.bus_number = b.bus_number
     JOIN 
-        routes r ON b.route_id = r.route_id
+        registrations reg ON s.studentId = reg.studentId
     WHERE 
         reg.date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND reg.approved = TRUE 
     GROUP BY 

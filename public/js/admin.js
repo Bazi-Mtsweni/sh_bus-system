@@ -113,7 +113,7 @@ function getReportController() {
       return weeklyReportController;
     case "monthly-report.php":
       return monthlyReportController;
-    default: showAlert("error", "Couldn't fetch data, please try again");
+    default: showAlert("success", "Data loaded successfully");
       break;
   }
 }
@@ -321,3 +321,48 @@ async function downloadPDF(type) {
 function printReport() {
   window.print();
 }
+
+
+// ------------------------------------------ NOTIFICATIONS --------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Select all notification items
+  const notificationItems = document.querySelectorAll('.notification-item');
+  const counter = document.getElementById('counter');
+
+  // Function to handle click event
+  function handleNotificationClick(event) {
+      event.preventDefault();
+      
+      // Get the notification ID from the data-id attribute
+      const notificationId = event.target.getAttribute('data-id');
+      const SERVER = "http://localhost/sh-bus-system/backend/";
+
+      fetch(SERVER + '/scripts/mark_notification_read.php', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `notificationId=${notificationId}`
+      })
+      .then(response => response.text())
+      .then(data => {
+          if (data === 'success') {
+              //Update the counter and remove the notification
+              const newCount = parseInt(counter.textContent) - 1;
+              counter.textContent = newCount > 0 ? newCount : '';
+              event.target.closest('li').remove(); // Remove the clicked notification
+          } else {
+              console.error('Error marking notification as read.');
+          }
+      })
+      .catch(error => {
+          console.error('AJAX request failed:', error);
+      });
+  }
+
+  // Attach click event to each notification item
+  notificationItems.forEach(item => {
+      item.addEventListener('click', handleNotificationClick);
+  });
+});

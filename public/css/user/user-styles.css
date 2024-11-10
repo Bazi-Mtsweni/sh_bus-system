@@ -43,9 +43,12 @@ html {
   --gold: #ffbc00;
   --hover-gold: #b18611;
   --red: #bc1402;
+  --hover-red: #741409;
   --text: #1e1e1e;
+  --hover-text: #080808;
   --bg: #ffffff;
   --white: #ffffff;
+  --grey: rgba(0, 0, 0, 0.15);
 
   --h1: 3.5rem;
   --h2: 2rem;
@@ -57,9 +60,11 @@ html {
 }
 body.dark {
   --text: #a6b5c3;
+  --hover-text: #7e8892;
   --bg: #040c14;
   --blue: #2c4b61;
   --gold: #d49c00;
+  --grey: rgba(255, 255, 255, 0.1);
 
   --shadow: 0px 0px 25px rgba(77, 99, 145, 0.15);
 }

@@ -1,0 +1,147 @@
+section {
+  width: 100%;
+  position: relative;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+table:nth-child(2) {
+  margin-bottom: 2rem;
+}
+table,
+th,
+td {
+  border: 2px solid var(--white);
+  padding: 1rem;
+  text-align: center;
+  color: var(--white);
+}
+.btn-blue {
+  display: block;
+  width: fit-content;
+}
+.bus-selection {
+  padding: 5%;
+  display: block;
+}
+.cta {
+  width: 100%;
+}
+h2 {
+  width: 100%;
+  text-align: center;
+  color: var(--blue);
+}
+h2 span {
+  font-size: calc(var(--h2) - 0.5rem);
+  color: var(--text);
+}
+
+/* ---------------------------------------- BUS INFO ------------------------------------------------------------ */
+
+.bus-info {
+  margin-top: 5rem;
+}
+.bus-info a {
+  color: var(--blue);
+}
+.bus-info a:hover {
+  text-decoration: underline;
+}
+.bus-info .tabs button {
+  border: none;
+  background-color: var(--grey);
+  padding: 1.5rem 3rem;
+  color: var(--text);
+  border-radius: 10px 10px 0px 0px;
+  margin-right: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+.bus-info .tabs button.active {
+  background-color: var(--blue);
+  color: var(--white);
+}
+.bus-info .info {
+  background-color: var(--blue);
+  color: var(--white);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-radius: 0 25px 25px 25px;
+  margin-bottom: 2rem;
+}
+.bus-info .info .left {
+  width: 80%;
+  padding: 5% 5% 0
+}
+.bus-info .info .left h4 {
+  margin-bottom: 1rem;
+  font-family: "Roboto", sans-serif;
+  color: var(--white);
+}
+.bus-info .info .image-container{
+    height: 520px;
+    overflow: hidden;
+}
+.bus-info .info .image-container img{
+    height: 100%;
+}
+.bus-form .instructions {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.bus-form .instructions p {
+  font-weight: bold;
+}
+.bus-form .instructions .fa-solid {
+  font-size: calc(var(--p) + 0.5rem);
+  color: goldenrod;
+  margin-right: 1rem;
+}
+.bus-form form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.bus-form form .input {
+  margin-right: 1.5rem;
+  margin-bottom: 1.5rem;
+  width: 30%;
+}
+.bus-form form .input select,
+.bus-form form .input input {
+  border: none;
+  background-color: var(--grey);
+  padding: 0.5rem;
+  color: var(--text);
+  width: 100%;
+}
+.bus-form form .input.time{
+    width: 30%;
+}
+.bus-form form label {
+  font-weight: bold;
+  display: block;
+  width: fit-content;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+.bus-form form .cta p {
+  margin-bottom: 3rem;
+}
+.bus-form form .cta .btn-blue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+}
+.bus-form form .cta .btn-blue .submit-btn-loader{
+  margin-left: 1rem;
+}
