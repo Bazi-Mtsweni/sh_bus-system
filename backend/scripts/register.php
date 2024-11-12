@@ -38,8 +38,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'httponly' => true, 
                     'samesite' => 'Lax' 
                 ]);
-                $_SESSION["parent_id"] = session_id();
-                $_SESSION["username"] = $parentName;
+                $parentId = $stmt->insert_id; //Added this
+                $_SESSION["parent_id"] = $parentId; //Added this
+                $_SESSION["username"] = $parentName; 
+                $_SESSION["parent_email"] = $email; //Added this
                 redirect(true, '../user/user-dashboard.php');
                 exit;
             } else {

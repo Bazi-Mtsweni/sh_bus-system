@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $busNumber = $_POST['bus'];
     $pickupNumber = isset($_POST['pickup']) ? $_POST['pickup'] : null;
     $dropoffNumber = isset($_POST['dropoff']) ? $_POST['dropoff'] : null;
-    $parentId = $_SESSION['parent_id']; // Assuming parentId is stored in session
+    $parentId = $_SESSION['parent_id']; 
 
     // Check if any required data is missing
     if (empty($studentName) || empty($grade) || empty($tel) || empty($busNumber)) {
